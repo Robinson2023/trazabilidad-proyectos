@@ -1,0 +1,41 @@
+[90m= [39m[
+    {#7400
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mcache[39m[32m"[39m,
+    },
+    {#7401
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mcache_locks[39m[32m"[39m,
+    },
+    {#7402
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mfailed_jobs[39m[32m"[39m,
+    },
+    {#7397
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32minventories[39m[32m"[39m,
+    },
+    {#7367
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mjob_batches[39m[32m"[39m,
+    },
+    {#7396
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mjobs[39m[32m"[39m,
+    },
+    {#7395
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mmaterials[39m[32m"[39m,
+    },
+    {#7394
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mmigrations[39m[32m"[39m,
+    },
+    {#7393
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mmovements[39m[32m"[39m,
+    },
+    {#7392
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mpassword_reset_tokens[39m[32m"[39m,
+    },
+    {#7391
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32mprojects[39m[32m"[39m,
+    },
+    {#7390
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32msessions[39m[32m"[39m,
+    },
+    {#7427
+      +"[1mTables_in_trazabilidad[22m": [32m"[39m[32musers[39m[32m"[39m,
+    },
+  ]
