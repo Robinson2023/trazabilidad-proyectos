@@ -15,4 +15,8 @@ class Worker extends Model
             ->withTimestamps();
     }
 
+    public function laborEntries()
+    {
+        return $this->hasMany(LaborEntry::class);
+    }
 }

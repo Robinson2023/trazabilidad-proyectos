@@ -7,7 +7,6 @@
 <form method="POST" action="{{ route('workers.update', $worker->id) }}">
     @csrf
     @method('PUT')
-
     <input name="name" value="{{ $worker->name }}" class="border p-2 w-full mb-2">
 
     <input name="role" value="{{ $worker->role }}" class="border p-2 w-full mb-2">

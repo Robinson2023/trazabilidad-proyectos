@@ -46,7 +46,7 @@
             </li>
 
             <li>
-                <a href="/projects/executive-dashboard"
+                <a href="{{ route('projects.executive-dashboard') }}"
                     class="block hover:bg-gray-700 p-2 rounded">
 
                          📊 Dashboard Gerencial
@@ -56,13 +56,24 @@
             <li>
 
                 <a href="{{ url('/workers') }}"
-                     class="block hover:bg-gray-700 p-2 rounded">
+                    class="block hover:bg-gray-700 p-2 rounded">
 
                         👷 Trabajadores
 
                 </a>
+
             </li>
 
+            <li>
+
+                <a href="{{ route('labor.index') }}"
+                    class="block hover:bg-gray-700 p-2 rounded">
+
+                        ⏱ Registro Horas
+
+                </a>
+
+            </li>
         </ul>
 
     </div>

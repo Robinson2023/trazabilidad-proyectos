@@ -21,7 +21,7 @@
         </div>
     @endif
 
-    <form method="POST" action="/warehouse/movement" class="space-y-4">
+    <form method="POST" action="{{ route('warehouse.movement') }}" class="space-y-4">
         @csrf
 
         <!-- Barcode / Código -->

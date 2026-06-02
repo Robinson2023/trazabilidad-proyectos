@@ -13,42 +13,7 @@ class MovementService
     {
         return DB::transaction(function () use ($data) {
 
-            $material = Material::findOrFail($data['material_id']);
-
-            $inventory = Inventory::firstOrCreate(
-                ['material_id' => $material->id],
-                ['quantity' => 0]
-            );
-
-            // Crear movimiento
-            $movement = Movement::create($data);
-
-            // Lógica de inventario
-  switch ($data['type']) {
-
-    case 'in':
-        $inventory->quantity += $data['quantity'];
-        break;
-
-    case 'out':
-        $inventory->quantity -= $data['quantity'];
-        break;
-
-    case 'return':
-        $inventory->quantity += $data['quantity'];
-        break;
-
-    case 'adjust':
-        $inventory->quantity = $data['quantity'];
-        break;
-
-    default:
-        throw new \Exception("Tipo de movimiento inválido");
-}
-
-            $inventory->save();
-
-            return $movement;
+            return Movement::create($data);
         });
     }
 }

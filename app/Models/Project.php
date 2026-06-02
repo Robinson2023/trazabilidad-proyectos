@@ -8,22 +8,28 @@ class Project extends Model
 {
     protected $fillable = [
         'name',
+        'budget',
         'client',
         'status',
+        'estimated_hours',
         'start_date',
-        'end_date',
-        'estimated_hours'
+        'end_date'
     ];
 
     public function movements()
-{
-    return $this->hasMany(Movement::class);
-}
+    {
+        return $this->hasMany(Movement::class);
+    }
 
-public function workers()
-{
-    return $this->belongsToMany(Worker::class)
-        ->withPivot('hours')
-        ->withTimestamps();
-}
+    public function workers()
+    {
+        return $this->belongsToMany(Worker::class)
+            ->withPivot('hours')
+            ->withTimestamps();
+    }
+
+    public function laborEntries()
+    {
+        return $this->hasMany(LaborEntry::class);
+    }
 }

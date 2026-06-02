@@ -2,19 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inventory;
 use App\Models\Material;
-use App\Models\Project;
+use App\Models\Movement;
+use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
-
     public function index()
-{
-    return view('inventory.index', [
-        'inventories' => Inventory::with('material')->get(),
-        'materials' => Material::all(),
-        'projects' => Project::all()
-    ]);
-}
+    {
+        $materials = Material::all()->map(function ($material) {
+
+            $in = Movement::where('material_id', $material->id)
+                ->where('type', 'in')
+                ->sum('quantity');
+
+            $out = Movement::where('material_id', $material->id)
+                ->where('type', 'out')
+                ->sum('quantity');
+
+            $stock = $in - $out;
+
+            $material->stock = $stock;
+
+            $material->status =
+                $stock <= 0 ? 'critical' :
+                ($stock < 10 ? 'low' : 'ok');
+
+            return $material;
+        });
+
+        return view('inventory.index', [
+            'materials' => $materials,
+            'projects' => \App\Models\Project::all()
+        ]);
+    }
 }

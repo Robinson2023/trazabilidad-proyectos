@@ -8,11 +8,11 @@ Nuevo Proyecto
 
 </h1>
 
-<form method="POST"
-      action="{{ route('projects.store') }}"
+<form method="POST" action="{{ route('projects.store') }}"
       class="bg-white p-6 rounded shadow">
 
 @csrf
+
 
 <div class="mb-4">
 
@@ -27,6 +27,29 @@ Nuevo Proyecto
 <label>Cliente</label>
 <input name="client"
        class="w-full border rounded p-2">
+
+</div>
+
+<div class="mb-4">
+<label>Presupuesto</label>
+
+<input
+type="number"
+step="0.01"
+name="budget"
+class="w-full border rounded p-2">
+
+</div>
+
+
+<div class="mb-4">
+
+<label>Horas estimadas</label>
+
+<input
+type="number"
+name="estimated_hours"
+class="w-full border rounded p-2">
 
 </div>
 

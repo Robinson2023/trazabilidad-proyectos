@@ -6,7 +6,7 @@
 
 <form method="POST" action="{{ route('workers.store') }}">
     @csrf
-
+        @method('PUT')
     <input name="name" placeholder="Nombre" class="border p-2 w-full mb-2">
 
     <input name="role" placeholder="Rol" class="border p-2 w-full mb-2">

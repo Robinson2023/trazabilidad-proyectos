@@ -49,7 +49,7 @@ class WarehouseController extends Controller
 
     public function findMaterial($code)
 {
-    $material = \App\Models\Material::where('code', $code)->first();
+    $material = Material::where('code', $code)->first();
 
     if (!$material) {
         return response()->json([

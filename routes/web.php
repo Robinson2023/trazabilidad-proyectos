@@ -13,8 +13,9 @@ Route::redirect('/', '/inventory');
 Route::middleware('auth')->group(function () {
 
     // Warehouse
+    Route::post('/warehouse/movement', [WarehouseController::class, 'storeMovement'])
+    ->name('warehouse.movement');
     Route::get('/warehouse', [WarehouseController::class, 'index']);
-    Route::post('/warehouse/movement', [WarehouseController::class, 'storeMovement']);
 
     // Inventory
     Route::get('/inventory', [InventoryController::class, 'index']);
@@ -37,27 +38,46 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
-    // Projects
-Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get(
+        '/projects/global-dashboard',
+        [ProjectController::class, 'globalDashboard']
+    )->name('projects.global-dashboard');
 
-Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::get(
+        '/projects/executive-dashboard',
+        [ProjectController::class, 'executiveDashboard']
+    )->name('projects.executive-dashboard');
 
-Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::get(
+        '/projects/{project}/dashboard',
+        [ProjectController::class, 'projectDashboard']
+    )->name('projects.dashboard');
 
-Route::get('/projects/global-dashboard', [ProjectController::class, 'globalDashboard'])
-    ->name('projects.globalDashboard');
+    Route::resource('projects', ProjectController::class);
 
-Route::get('/projects/{project}/dashboard', [ProjectController::class, 'projectDashboard'])
-    ->name('projects.dashboard');
 });
-
-Route::get('/projects/global-dashboard', [ProjectController::class, 'globalDashboard']);
-
-Route::get('/projects/executive-dashboard', [ProjectController::class, 'executiveDashboard']);
 
 Route::resource('workers', App\Http\Controllers\WorkerController::class);
 
-Route::get('/projects/{project}/workers', [ProjectController::class, 'assignWorkers']);
-Route::post('/projects/{project}/workers', [ProjectController::class, 'storeWorkers']);
+Route::get(
+    '/labor',
+    [App\Http\Controllers\LaborEntryController::class, 'index']
+)->name('labor.index');
+
+Route::get(
+    '/labor/create',
+    [App\Http\Controllers\LaborEntryController::class, 'create']
+)->name('labor.create');
+
+Route::post(
+    '/labor',
+    [App\Http\Controllers\LaborEntryController::class, 'store']
+)->name('labor.store');
+
+Route::get('/projects/{id}/workers', [ProjectController::class, 'assignWorkers']);
+Route::post(
+    '/projects/{project}/workers',
+    [ProjectController::class, 'storeWorkers']
+)->name('projects.storeWorkers');
 
 require __DIR__.'/auth.php';

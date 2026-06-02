@@ -25,17 +25,34 @@
             <td>{{ $worker->name }}</td>
             <td>{{ $worker->role }}</td>
             <td>${{ $worker->hour_rate }}</td>
-            <td>
-                <a href="{{ route('workers.edit', $worker->id) }}">Editar</a>
+<td class="space-x-2">
 
-                <form method="POST"
-                      action="{{ route('workers.destroy', $worker->id) }}"
-                      style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button>Eliminar</button>
-                </form>
-            </td>
+<a
+href="{{ route('workers.edit',$worker->id) }}"
+class="bg-yellow-500 text-white px-3 py-1 rounded">
+
+Editar
+
+</a>
+
+<form
+method="POST"
+action="{{ route('workers.destroy',$worker->id) }}"
+class="inline">
+
+@csrf
+@method('DELETE')
+
+<button
+class="bg-red-500 text-white px-3 py-1 rounded">
+
+Eliminar
+
+</button>
+
+</form>
+
+</td>
         </tr>
         @endforeach
     </tbody>

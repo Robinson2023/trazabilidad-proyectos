@@ -6,12 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-    protected $fillable = [
-        'code',
-        'name',
-        'unit',
-        'base_cost'
-    ];
+ protected $fillable = [
+    'code',
+    'name',
+    'unit',
+    'base_cost',
+    'purchase_unit',
+    'purchase_quantity',
+    'purchase_cost',
+    'initial_quantity'
+];
 
     public function inventory()
     {
@@ -23,7 +27,7 @@ class Material extends Model
         return $this->hasMany(Movement::class);
     }
 
-    protected static function boot()
+protected static function boot()
 {
     parent::boot();
 
@@ -31,9 +35,10 @@ class Material extends Model
 
         $last = Material::orderBy('id', 'desc')->first();
 
-        $nextNumber = $last ? $last->id + 1 : 1;
+        $nextId = $last ? $last->id + 1 : 1;
 
-        $material->code = 'MAT-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+        $material->code = 'MAT-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
     });
 }
+
 }

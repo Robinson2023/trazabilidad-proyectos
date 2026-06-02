@@ -12,13 +12,14 @@
 </div>
 
 <div class="mb-4">
-    <a href="/projects/global-dashboard"
+    <a href="{{ route('projects.global-dashboard') }}"
        class="bg-green-500 text-white px-4 py-2 rounded">
         📊 Dashboard Gerencial
     </a>
 </div>
 
 <table class="w-full bg-white shadow rounded">
+
     <thead>
         <tr class="border-b">
             <th class="p-3">Nombre</th>
@@ -29,13 +30,16 @@
     </thead>
 
     <tbody>
+
         @foreach($projects as $project)
+
         <tr class="border-b">
             <td class="p-3">{{ $project->name }}</td>
             <td class="p-3">{{ $project->client }}</td>
             <td class="p-3">{{ $project->status }}</td>
 
             <td class="p-3 space-x-2">
+
                 <a href="/projects/{{ $project->id }}/dashboard"
                    class="text-blue-500">
                     Dashboard
@@ -45,10 +49,27 @@
                    class="text-green-500">
                     Workers
                 </a>
+
+                <td>
+        <a href="{{ route('projects.edit', $project->id) }}">
+            Editar
+        </a>
+
+        <form method="POST" action="{{ route('projects.destroy', $project->id) }}">
+            @csrf
+            @method('DELETE')
+
+            <button>Eliminar</button>
+        </form>
+    </td>
+
             </td>
         </tr>
+
         @endforeach
+
     </tbody>
+
 </table>
 
 @endsection

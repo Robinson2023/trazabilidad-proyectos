@@ -50,10 +50,9 @@ class ProjectController extends Controller
         return view('projects.dashboard', compact('data'));
     }
 
-    public function index()
+public function index()
 {
-    $projects = \App\Models\Project::all();
-
+    $projects = Project::all();
     return view('projects.index', compact('projects'));
 }
 
@@ -66,17 +65,25 @@ public function store(Request $request)
 {
     $request->validate([
         'name' => 'required',
-        'client' => 'nullable'
+        'client' => 'nullable',
+        'budget' => 'nullable|numeric',
+        'estimated_hours' => 'nullable|numeric'
     ]);
 
-    \App\Models\Project::create($request->all());
+    Project::create($request->only([
+        'name','client','budget','estimated_hours'
+    ]));
 
     return redirect()->route('projects.index');
 }
 
 public function projectDashboard(Project $project)
 {
-    $project->load(['movements.material', 'workers']);
+    $project->load([
+    'movements.material',
+    'workers',
+    'laborEntries.worker'
+]);
 
     $movements = $project->movements->where('type', 'out');
 
@@ -107,7 +114,25 @@ public function projectDashboard(Project $project)
         }
     }
 
-    // PRESUPUESTO
+  
+
+ // 📋 HORAS PRESUPUESTADAS
+$plannedHours = $project->workers->sum(function ($worker) {
+    return $worker->pivot->hours;
+});
+
+// ⏱ HORAS REALES
+$realHours = $project->laborEntries->sum('hours');
+
+// 👷 COSTO REAL DE MANO DE OBRA
+$workerCost = $project->laborEntries->sum(function ($entry) {
+    return $entry->hours * $entry->worker->hour_rate;
+});
+
+// 💰 COSTO TOTAL REAL
+$realCost = $totalCost + $workerCost;
+
+  // PRESUPUESTO
     $budget = $project->budget ?? 0;
 
     $variance = 0;
@@ -115,61 +140,67 @@ public function projectDashboard(Project $project)
     $status = 'OK';
 
     if ($budget > 0) {
-        $variance = $totalCost - $budget;
-        $percentage = ($variance / $budget) * 100;
 
-        if ($percentage > 20) {
-            $status = 'OVER';
-        } elseif ($percentage > 0) {
-            $status = 'WARNING';
-        }
+    $variance = $realCost - $budget;
+
+    $percentage = ($variance / $budget) * 100;
+
+    if ($percentage > 20) {
+        $status = 'OVER';
+    } elseif ($percentage > 0) {
+        $status = 'WARNING';
     }
-
-    // 👷 COSTO MANO DE OBRA
-    $workerCost = $project->workers->sum(function ($worker) {
-        return $worker->pivot->hours * $worker->hour_rate;
-    });
-
-    return view('projects.dashboard', compact(
-        'project',
-        'totalQuantity',
-        'totalCost',
-        'materials',
-        'alert',
-        'budget',
-        'variance',
-        'percentage',
-        'status',
-        'workerCost'
-    ));
 }
-public function show($id)
-{
-    $project = \App\Models\Project::findOrFail($id);
 
+$laborEntries = $project->laborEntries()
+    ->with('worker')
+    ->orderBy('work_date', 'desc')
+    ->get();
+
+return view('projects.dashboard', compact(
+    'project',
+    'totalQuantity',
+    'totalCost',
+    'materials',
+    'alert',
+    'budget',
+    'variance',
+    'percentage',
+    'status',
+    'workerCost',
+    'realCost',
+    'plannedHours',
+    'realHours',
+    'laborEntries'
+));
+}
+public function show(Project $project)
+{
     return view('projects.show', compact('project'));
 }
 
-public function edit($id)
+public function edit(Project $project)
 {
-    $project = \App\Models\Project::findOrFail($id);
-
     return view('projects.edit', compact('project'));
 }
 
-public function update(Request $request, $id)
+public function update(Request $request, Project $project)
 {
-    $project = \App\Models\Project::findOrFail($id);
+    $request->validate([
+        'name' => 'required',
+        'client' => 'nullable',
+        'budget' => 'nullable|numeric',
+        'estimated_hours' => 'nullable|numeric'
+    ]);
 
-    $project->update($request->all());
+    $project->update($request->only([
+        'name','client','budget','estimated_hours'
+    ]));
 
     return redirect()->route('projects.index');
 }
-
-public function destroy($id)
+public function destroy(Project $project)
 {
-    $project = \App\Models\Project::findOrFail($id);
-
     $project->delete();
 
     return redirect()->route('projects.index');
@@ -177,20 +208,39 @@ public function destroy($id)
 
 public function globalDashboard()
 {
-    $projects = \App\Models\Project::with(['movements.material'])->get();
+    $projects = Project::with([
+        'movements.material',
+        'workers'
+    ])->get();
 
     $chartData = $projects->map(function ($project) {
 
-        $consumption = $project->movements->where('type', 'out');
+        // COSTO MATERIALES
+        $materialCost = $project->movements
+            ->where('type', 'out')
+            ->sum(function ($m) {
+                return $m->quantity * ($m->material->base_cost ?? 0);
+            });
 
-        $totalCost = $consumption->sum(function ($m) {
-            return $m->quantity * ($m->material->base_cost ?? 0);
+        // COSTO MANO DE OBRA
+        $workerCost = $project->workers->sum(function ($worker) {
+            return $worker->pivot->hours * $worker->hour_rate;
         });
 
+        // COSTO TOTAL REAL
+        $realCost = $materialCost + $workerCost;
+
         return [
-            'name' => $project->name,
-            'y' => (float) $totalCost
-        ];
+    'name' => $project->name,
+
+    'material_cost' => $materialCost,
+
+    'worker_cost' => $workerCost,
+
+    'total_cost' => $realCost,
+
+    'y' => (float) $realCost
+];
     });
 
     return view('projects.global-dashboard', compact('chartData'));
@@ -198,15 +248,24 @@ public function globalDashboard()
 
 public function executiveDashboard()
 {
-    $projects = Project::with(['movements.material'])->get();
+    $projects = Project::with(['movements.material', 'workers'])->get();
 
     $data = $projects->map(function ($project) {
 
         $movements = $project->movements->where('type', 'out');
 
+        // COSTO MATERIALES
         $totalCost = $movements->sum(function ($m) {
             return $m->quantity * ($m->material->base_cost ?? 0);
         });
+
+        // COSTO MANO DE OBRA
+        $workerCost = $project->workers->sum(function ($worker) {
+            return $worker->pivot->hours * $worker->hour_rate;
+        });
+
+        // COSTO REAL
+        $realCost = $totalCost + $workerCost;
 
         $budget = $project->budget ?? 0;
 
@@ -214,15 +273,22 @@ public function executiveDashboard()
         $percentage = 0;
 
         if ($budget > 0) {
-            $variance = $totalCost - $budget;
+            $variance = $realCost - $budget;
             $percentage = ($variance / $budget) * 100;
         }
 
         return [
             'name' => $project->name,
             'budget' => $budget,
-            'cost' => $totalCost,
+
+            'material_cost' => $totalCost,
+
+            'worker_cost' => $workerCost,
+
+            'cost' => $realCost,
+
             'variance' => $variance,
+
             'percentage' => $percentage,
         ];
     });
@@ -252,4 +318,5 @@ public function storeWorkers(Request $request, Project $project)
 
     return redirect()->route('projects.dashboard', $project);
 }
+
 }

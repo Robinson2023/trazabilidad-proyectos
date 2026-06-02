@@ -3,73 +3,67 @@
 @section('content')
 
 <div class="flex justify-between mb-4">
-
-    <h1 class="text-2xl font-bold">
-        Materials
-    </h1>
+    <h1 class="text-2xl font-bold">Materiales</h1>
 
     <a href="{{ route('materials.create') }}"
        class="bg-blue-500 text-white px-4 py-2 rounded">
-
-        Nuevo material
-
+        Nuevo Material
     </a>
-
 </div>
 
 <table class="w-full bg-white shadow rounded">
 
     <thead>
-
         <tr class="border-b">
-
-            <th class="p-3">Código</th>
             <th class="p-3">Nombre</th>
             <th class="p-3">Unidad</th>
-            <th class="p-3">Costo</th>
+            <th class="p-3">Compra</th>
+            <th class="p-3">Costo unitario</th>
             <th class="p-3">Acciones</th>
-
         </tr>
-
     </thead>
 
     <tbody>
-
         @foreach($materials as $material)
-
         <tr class="border-b">
 
+            <td class="p-3">{{ $material->name }}</td>
+            <td class="p-3">{{ $material->unit }}</td>
+
             <td class="p-3">
-                {{ $material->code }}
+                {{ $material->purchase_quantity }}
+                {{ $material->purchase_unit }}
+                / ${{ $material->purchase_cost }}
             </td>
 
             <td class="p-3">
-                {{ $material->name }}
+                ${{ number_format($material->base_cost, 2) }}
             </td>
 
-            <td class="p-3">
-                {{ $material->unit }}
-            </td>
+            <td class="p-3 space-x-2">
 
-            <td class="p-3">
-                {{ number_format($material->base_cost) }}
-            </td>
-
-            <td class="p-3">
-
-                <a href="{{ route('materials.edit',$material) }}"
-                   class="text-blue-500">
-
+                <a href="{{ route('materials.edit', $material->id) }}"
+                   class="bg-yellow-500 text-white px-2 py-1 rounded">
                     Editar
-
                 </a>
+
+                <form method="POST"
+                      action="{{ route('materials.destroy', $material->id) }}"
+                      class="inline">
+
+                    @csrf
+                    @method('DELETE')
+
+                    <button class="bg-red-500 text-white px-2 py-1 rounded">
+                        Eliminar
+                    </button>
+
+                </form>
 
             </td>
 
         </tr>
-
         @endforeach
-
     </tbody>
 
 </table>
