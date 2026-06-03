@@ -65,6 +65,5 @@ if ($entry) {
 }
 
 LaborEntry::create($data);
-
 }
 }

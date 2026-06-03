@@ -27,28 +27,31 @@ class MaterialController extends Controller
 
             'initial_quantity' => 'nullable|numeric|min:0',
 
-            'purchase_unit' => 'nullable|string',
-            'purchase_quantity' => 'nullable|numeric',
-            'purchase_cost' => 'nullable|numeric',
-
-
             // NUEVO MODELO DE COMPRA
             'purchase_unit' => 'nullable|string',
             'purchase_quantity' => 'nullable|numeric',
             'purchase_cost' => 'nullable|numeric',
         ]);
 
-        // cálculo automático del costo unitario
-        $data['base_cost'] = null;
+ // cálculo automático del costo unitario
 
-        if (
-            !empty($data['purchase_quantity']) &&
-            !empty($data['purchase_cost']) &&
-            $data['purchase_quantity'] > 0
-        ) {
-            $data['base_cost'] =
-                $data['purchase_cost'] / $data['purchase_quantity'];
-        }
+$data['base_cost'] = null;
+
+if (!empty($data['purchase_cost'])) {
+
+    if (
+        !empty($data['purchase_quantity']) &&
+        $data['purchase_quantity'] > 0
+    ) {
+
+        $data['base_cost'] =
+            $data['purchase_cost'] / $data['purchase_quantity'];
+
+    } else {
+
+        $data['base_cost'] = $data['purchase_cost'];
+    }
+}
 
 $material = Material::create($data);
 
@@ -95,17 +98,26 @@ if (
             'purchase_cost' => 'nullable|numeric',
         ]);
 
-        // recalcular costo unitario
-        $data['base_cost'] = $material->base_cost;
+ // recalcular costo unitario
 
-        if (
-            !empty($data['purchase_quantity']) &&
-            !empty($data['purchase_cost']) &&
-            $data['purchase_quantity'] > 0
-        ) {
-            $data['base_cost'] =
-                $data['purchase_cost'] / $data['purchase_quantity'];
-        }
+$data['base_cost'] = $material->base_cost;
+
+if (!empty($data['purchase_cost'])) {
+
+    if (
+        !empty($data['purchase_quantity']) &&
+        $data['purchase_quantity'] > 0
+    ) {
+
+        $data['base_cost'] =
+            $data['purchase_cost'] / $data['purchase_quantity'];
+
+    } else {
+
+        // materiales unitarios
+        $data['base_cost'] = $data['purchase_cost'];
+    }
+}
 
         $oldQuantity = $material->initial_quantity ?? 0;
 

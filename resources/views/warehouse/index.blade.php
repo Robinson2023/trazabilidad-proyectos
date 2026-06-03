@@ -1,78 +1,173 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Almacén</title>
-    @vite('resources/css/app.css')
-</head>
-
 @extends('layouts.app')
 
 @section('content')
 
-<body class="bg-gray-100">
+<h1 class="text-2xl font-bold mb-6">
+    Almacén - Movimientos
+</h1>
 
-<div class="max-w-3xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
+@if(session('success'))
+    <div class="bg-green-100 text-green-700 p-3 mb-4 rounded">
+        {{ session('success') }}
+    </div>
+@endif
 
-    <h1 class="text-2xl font-bold mb-6">Almacén - Movimientos</h1>
+<form method="POST"
+      action="{{ route('warehouse.movement') }}"
+      class="space-y-4">
 
-    @if(session('success'))
-        <div class="bg-green-100 text-green-700 p-2 mb-4 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
+    @csrf
 
-    <form method="POST" action="{{ route('warehouse.movement') }}" class="space-y-4">
-        @csrf
+    <div>
+        <label class="font-semibold">
+            Código de material
+        </label>
 
-        <!-- Barcode / Código -->
-        <div>
-            <label class="font-semibold">Código de material</label>
-            <input type="text" name="material_code"
-                   class="w-full border p-2 rounded"
-                   placeholder="Escanear o escribir MAT-00001">
-        </div>
+        <input
+            id="material_code"
+            type="text"
+            name="material_code"
+            class="w-full border p-2 rounded"
+            placeholder="Escanear o escribir MAT-00001">
+    </div>
 
-        <!-- Tipo -->
-        <div>
-            <label class="font-semibold">Tipo de movimiento</label>
-            <select name="type" class="w-full border p-2 rounded">
-                <option value="out">Salida a proyecto</option>
-                <option value="return">Devolución</option>
-            </select>
-        </div>
+    <div id="material-info"
+         class="hidden bg-blue-50 border border-blue-200 p-3 rounded">
 
-        <!-- Proyecto -->
-        <div>
-            <label class="font-semibold">Proyecto</label>
-            <select name="project_id" class="w-full border p-2 rounded">
-                <option value="">-- Seleccionar --</option>
-                @foreach($projects as $project)
-                    <option value="{{ $project->id }}">
-                        {{ $project->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <p>
+            <strong>Código:</strong>
+            <span id="material-code"></span>
+        </p>
 
-        <!-- Cantidad -->
-        <div>
-            <label class="font-semibold">Cantidad</label>
-            <input type="number" step="0.01" name="quantity"
-                   class="w-full border p-2 rounded">
-        </div>
+        <p>
+            <strong>Material:</strong>
+            <span id="material-name"></span>
+        </p>
 
-        <!-- Notas -->
-        <div>
-            <label class="font-semibold">Notas</label>
-            <textarea name="notes" class="w-full border p-2 rounded"></textarea>
-        </div>
+    </div>
 
-        <button class="bg-blue-600 text-white px-4 py-2 rounded w-full">
-            Registrar movimiento
-        </button>
-    </form>
+    <div>
+        <label class="font-semibold">
+            Tipo de movimiento
+        </label>
 
-</div>
+        <select name="type"
+                class="w-full border p-2 rounded">
+
+            <option value="out">
+                Salida a proyecto
+            </option>
+
+            <option value="return">
+                Devolución
+            </option>
+
+        </select>
+    </div>
+
+    <div>
+        <label class="font-semibold">
+            Proyecto
+        </label>
+
+        <select name="project_id"
+                class="w-full border p-2 rounded">
+
+            <option value="">
+                -- Seleccionar --
+            </option>
+
+            @foreach($projects as $project)
+                <option value="{{ $project->id }}">
+                    {{ $project->name }}
+                </option>
+            @endforeach
+
+        </select>
+    </div>
+
+    <div>
+        <label class="font-semibold">
+            Cantidad
+        </label>
+
+        <input type="number"
+               step="0.01"
+               name="quantity"
+               class="w-full border p-2 rounded">
+    </div>
+
+    <div>
+        <label class="font-semibold">
+            Notas
+        </label>
+
+        <textarea name="notes"
+                  class="w-full border p-2 rounded"></textarea>
+    </div>
+
+    <button
+        type="submit"
+        class="bg-blue-600 text-white px-4 py-2 rounded w-full">
+
+        Registrar movimiento
+
+    </button>
+
+</form>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const input = document.getElementById('material_code');
+
+    input.addEventListener('keypress', function(e) {
+
+        if (e.key === 'Enter') {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const code = this.value.trim();
+
+            if (!code) return;
+
+            fetch('/material/' + code)
+                .then(response => response.json())
+                .then(data => {
+
+                    if (!data.found) {
+
+                        alert('Material no encontrado');
+
+                        document
+                            .getElementById('material-info')
+                            .classList.add('hidden');
+
+                        return;
+                    }
+
+                    document
+                        .getElementById('material-info')
+                        .classList.remove('hidden');
+
+                    document
+                        .getElementById('material-code')
+                        .innerText = data.material.code;
+
+                    document
+                        .getElementById('material-name')
+                        .innerText = data.material.name;
+
+                });
+
+            return false;
+        }
+
+    });
+
+});
+
+</script>
 @endsection
-</body>
-</html>
