@@ -46,6 +46,19 @@
 
     </div>
 
+ <select name="worker_id" class="w-full border p-2 rounded">
+
+    <option value="">
+        -- Seleccionar trabajador --
+    </option>
+
+    @foreach($workers as $worker)
+        <option value="{{ $worker->id }}">
+            {{ $worker->name }}
+        </option>
+    @endforeach
+
+</select>
     <div>
         <label class="font-semibold">
             Tipo de movimiento

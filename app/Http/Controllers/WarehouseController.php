@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Material;
 use App\Models\Project;
 use App\Services\MovementService;
+use App\Models\Worker;
 
 class WarehouseController extends Controller
 {
@@ -13,12 +14,13 @@ class WarehouseController extends Controller
         protected MovementService $service
     ) {}
 
-    public function index()
-    {
-        return view('warehouse.index', [
-            'projects' => Project::all()
-        ]);
-    }
+public function index()
+{
+    return view('warehouse.index', [
+        'projects' => Project::all(),
+        'workers' => Worker::all()
+    ]);
+}
 
     public function storeMovement(Request $request)
     {
@@ -29,7 +31,8 @@ class WarehouseController extends Controller
             'material_code' => 'required|string',
             'project_id' => 'nullable|exists:projects,id',
             'quantity' => 'required|numeric|min:0.01',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
+            'worker_id' => 'nullable|exists:workers,id'
         ]);
 
         $material = Material::where('code', $data['material_code'])->firstOrFail();
@@ -41,7 +44,8 @@ class WarehouseController extends Controller
             'quantity' => $data['quantity'],
             'barcode_scanned' => $data['material_code'],
             'user_id' => auth()->id(),
-            'notes' => $data['notes'] ?? null
+            'notes' => $data['notes'] ?? null,
+             'worker_id' => $data['worker_id'] ?? null,
         ]);
 
         return back()->with('success', 'Movimiento registrado correctamente');

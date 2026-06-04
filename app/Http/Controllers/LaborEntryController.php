@@ -65,5 +65,12 @@ if ($entry) {
 }
 
 LaborEntry::create($data);
+
+return redirect()
+    ->route('labor.index')
+    ->with(
+        'success',
+        'Horas registradas correctamente.'
+    );
 }
 }

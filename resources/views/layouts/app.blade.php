@@ -15,33 +15,33 @@
     <!-- SIDEBAR -->
     <div class="w-64 bg-gray-900 text-white p-4">
 
-        <h2 class="text-xl font-bold mb-6">Almacén</h2>
+        <h2 class="text-xl font-bold mb-6">Indumet CORP SAS</h2>
 
         <ul class="space-y-3">
 
             <li>
                 <a href="/warehouse" class="block hover:bg-gray-700 p-2 rounded">
-                    🚚 Warehouse
+                    🚚 Almacén
                 </a>
             </li>
 
             <li>
                 <a href="/inventory" class="block hover:bg-gray-700 p-2 rounded">
-                    📦 Inventory
+                    📦 Inventario
                 </a>
             </li>
 
             <li>
                 <a href="/materials"
                     class="block hover:bg-gray-700 p-2 rounded">
-                        📦 Materials
+                        📦 Crear Materiales
                 </a>
             </li>
 
             <li>
                 <a href="/projects"
                     class="block hover:bg-gray-700 p-2 rounded">
-                        🏗 Projects
+                        🏗 Proyectos
                 </a>
             </li>
 
@@ -49,7 +49,7 @@
                 <a href="{{ route('projects.executive-dashboard') }}"
                     class="block hover:bg-gray-700 p-2 rounded">
 
-                         📊 Dashboard Gerencial
+                         📊 Analizis Gerencial 
                 </a>
             </li>
 
@@ -74,6 +74,17 @@
                 </a>
 
             </li>
+
+            <li>
+
+                <a href="{{ route('material-log.index') }}"
+                    class="block hover:bg-gray-700 p-2 rounded">
+
+                    📦 Registro Materiales
+
+                </a>
+
+</li>
         </ul>
 
     </div>

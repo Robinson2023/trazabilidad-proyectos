@@ -13,7 +13,8 @@ class Movement extends Model
         'user_id',
         'quantity',
         'barcode_scanned',
-        'notes'
+        'notes',
+        'worker_id'
     ];
 
     public function material()
@@ -34,5 +35,10 @@ class Movement extends Model
     public function movements()
     {
         return $this->hasMany(Movement::class);
+    }
+
+    public function worker()
+    {
+        return $this->belongsTo(Worker::class);
     }
 }

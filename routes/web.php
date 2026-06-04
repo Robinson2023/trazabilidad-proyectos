@@ -7,6 +7,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\globalDashboardController;
+use App\Http\Controllers\MaterialLogController;
 
 Route::redirect('/', '/inventory');
 
@@ -79,5 +80,10 @@ Route::post(
     '/projects/{project}/workers',
     [ProjectController::class, 'storeWorkers']
 )->name('projects.storeWorkers');
+
+Route::get(
+    '/material-log',
+    [MaterialLogController::class, 'index']
+)->name('material-log.index');
 
 require __DIR__.'/auth.php';
