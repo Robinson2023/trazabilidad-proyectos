@@ -7,11 +7,25 @@ use Illuminate\Http\Request;
 
 class WorkerController extends Controller
 {
-    public function index()
-    {
-        $workers = Worker::all();
-        return view('workers.index', compact('workers'));
+public function index()
+{
+    $query = Worker::query();
+
+    if (request('search')) {
+
+        $search = request('search');
+
+        $query->where('name', 'like', "%{$search}%")
+              ->orWhere('role', 'like', "%{$search}%");
     }
+
+    $workers = $query->get();
+
+    return view(
+        'workers.index',
+        compact('workers')
+    );
+}
 
     public function create()
     {

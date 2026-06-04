@@ -19,72 +19,150 @@
 
         <ul class="space-y-3">
 
-            <li>
-                <a href="/warehouse" class="block hover:bg-gray-700 p-2 rounded">
-                    🚚 Almacén
-                </a>
-            </li>
+            @if(
+    auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'warehouse'
+)
 
-            <li>
-                <a href="/inventory" class="block hover:bg-gray-700 p-2 rounded">
-                    📦 Inventario
-                </a>
-            </li>
+<li>
 
-            <li>
-                <a href="/materials"
-                    class="block hover:bg-gray-700 p-2 rounded">
-                        📦 Crear Materiales
-                </a>
-            </li>
+    <a href="/warehouse"
+        class="block hover:bg-gray-700 p-2 rounded">
 
-            <li>
-                <a href="/projects"
-                    class="block hover:bg-gray-700 p-2 rounded">
-                        🏗 Proyectos
-                </a>
-            </li>
+        🚚 Warehouse
 
-            <li>
-                <a href="{{ route('projects.executive-dashboard') }}"
-                    class="block hover:bg-gray-700 p-2 rounded">
-
-                         📊 Analizis Gerencial 
-                </a>
-            </li>
-
-            <li>
-
-                <a href="{{ url('/workers') }}"
-                    class="block hover:bg-gray-700 p-2 rounded">
-
-                        👷 Trabajadores
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="{{ route('labor.index') }}"
-                    class="block hover:bg-gray-700 p-2 rounded">
-
-                        ⏱ Registro Horas
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="{{ route('material-log.index') }}"
-                    class="block hover:bg-gray-700 p-2 rounded">
-
-                    📦 Registro Materiales
-
-                </a>
+    </a>
 
 </li>
+
+@endif
+
+           @if(
+    auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'warehouse'
+)
+
+<li>
+    <a href="/inventory"
+       class="block hover:bg-gray-700 p-2 rounded">
+
+        📦 Inventario
+
+    </a>
+</li>
+
+@endif
+
+@if(
+    auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'warehouse'
+)
+
+<li>
+    <a href="/materials"
+       class="block hover:bg-gray-700 p-2 rounded">
+
+        📦 Crear Materiales
+
+    </a>
+</li>
+
+@endif
+
+@if(
+    in_array(
+        auth()->user()->role,
+        ['admin','management','supervisor']
+    )
+)
+
+<li>
+
+    <a href="/projects"
+       class="block hover:bg-gray-700 p-2 rounded">
+
+        🏗 Proyectos
+
+    </a>
+
+</li>
+
+@endif
+
+            @if(
+    auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'management'
+)
+
+<li>
+
+    <a href="{{ route('projects.executive-dashboard') }}"
+        class="block hover:bg-gray-700 p-2 rounded">
+
+        📊 Dashboard Gerencial
+
+    </a>
+
+</li>
+
+@endif
+ @if(
+    in_array(
+        auth()->user()->role,
+        ['admin','management']
+    )
+)
+
+<li>
+
+    <a href="{{ url('/workers') }}"
+       class="block hover:bg-gray-700 p-2 rounded">
+
+        👷 Trabajadores
+
+    </a>
+
+</li>
+
+@endif
+
+            @if(
+    in_array(
+        auth()->user()->role,
+        ['admin','worker','supervisor']
+    )
+)
+
+<li>
+
+    <a href="{{ route('labor.index') }}"
+        class="block hover:bg-gray-700 p-2 rounded">
+
+        ⏱ Registro Horas
+
+    </a>
+
+</li>
+
+@endif
+
+@if(
+    auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'warehouse'
+)
+
+<li>
+
+    <a href="{{ route('material-log.index') }}"
+       class="block hover:bg-gray-700 p-2 rounded">
+
+        📦 Registro Materiales
+
+    </a>
+
+</li>
+
+@endif
         </ul>
 
     </div>

@@ -9,17 +9,51 @@ use Illuminate\Http\Request;
 
 class LaborEntryController extends Controller
 {
-    public function index()
-    {
-        $entries = LaborEntry::with([
-            'worker',
-            'project'
-        ])
+public function index()
+{
+    $query = LaborEntry::with([
+        'worker',
+        'project'
+    ]);
+
+    if (request('search')) {
+
+        $search = request('search');
+
+        $query->where(function ($q) use ($search) {
+
+            $q->whereHas('worker', function ($worker) use ($search) {
+
+                $worker->where(
+                    'name',
+                    'like',
+                    "%{$search}%"
+                );
+
+            })
+
+            ->orWhereHas('project', function ($project) use ($search) {
+
+                $project->where(
+                    'name',
+                    'like',
+                    "%{$search}%"
+                );
+
+            });
+
+        });
+    }
+
+    $entries = $query
         ->latest('work_date')
         ->get();
 
-        return view('labor.index', compact('entries'));
-    }
+    return view(
+        'labor.index',
+        compact('entries')
+    );
+}
 
     public function create()
     {

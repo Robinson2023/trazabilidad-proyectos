@@ -52,10 +52,24 @@ class ProjectController extends Controller
 
 public function index()
 {
-    $projects = Project::all();
-    return view('projects.index', compact('projects'));
-}
+    $query = Project::query();
 
+    if (request('search')) {
+
+        $search = request('search');
+
+        $query->where('name', 'like', "%{$search}%")
+              ->orWhere('client', 'like', "%{$search}%")
+              ->orWhere('status', 'like', "%{$search}%");
+    }
+
+    $projects = $query->get();
+
+    return view(
+        'projects.index',
+        compact('projects')
+    );
+}
 public function create()
 {
     return view('projects.create');

@@ -19,7 +19,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/warehouse', [WarehouseController::class, 'index']);
 
     // Inventory
-    Route::get('/inventory', [InventoryController::class, 'index']);
+    Route::get(
+            '/inventory',
+            [InventoryController::class, 'index']
+            )->name('inventory.index');
 
     // Material
     Route::resource('materials', App\Http\Controllers\MaterialController::class);

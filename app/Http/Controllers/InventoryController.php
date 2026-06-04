@@ -8,32 +8,42 @@ use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
-    public function index()
-    {
-        $materials = Material::all()->map(function ($material) {
+public function index()
+{
+    $query = Material::query();
 
-            $in = Movement::where('material_id', $material->id)
-                ->where('type', 'in')
-                ->sum('quantity');
+    if (request('search')) {
 
-            $out = Movement::where('material_id', $material->id)
-                ->where('type', 'out')
-                ->sum('quantity');
+        $search = request('search');
 
-            $stock = $in - $out;
-
-            $material->stock = $stock;
-
-            $material->status =
-                $stock <= 0 ? 'critical' :
-                ($stock < 10 ? 'low' : 'ok');
-
-            return $material;
-        });
-
-        return view('inventory.index', [
-            'materials' => $materials,
-            'projects' => \App\Models\Project::all()
-        ]);
+        $query->where('name', 'like', "%{$search}%")
+              ->orWhere('code', 'like', "%{$search}%");
     }
+
+    $materials = $query->get()->map(function ($material) {
+
+        $in = Movement::where('material_id', $material->id)
+            ->where('type', 'in')
+            ->sum('quantity');
+
+        $out = Movement::where('material_id', $material->id)
+            ->where('type', 'out')
+            ->sum('quantity');
+
+        $stock = $in - $out;
+
+        $material->stock = $stock;
+
+        $material->status =
+            $stock <= 0 ? 'critical' :
+            ($stock < 10 ? 'low' : 'ok');
+
+        return $material;
+    });
+
+    return view('inventory.index', [
+        'materials' => $materials,
+        'projects' => \App\Models\Project::all()
+    ]);
+}
 }

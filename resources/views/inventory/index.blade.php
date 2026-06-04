@@ -2,6 +2,33 @@
 
 @section('content')
 
+
+<form method="GET" class="flex gap-2 mb-4">
+
+    <input
+        type="text"
+        name="search"
+        value="{{ request('search') }}"
+        placeholder="Buscar por código o material..."
+        class="border p-2 rounded flex-1">
+
+    <button
+        type="submit"
+        class="bg-blue-600 text-white px-4 py-2 rounded">
+
+        Buscar
+
+    </button>
+
+    <a href="{{ route('inventory.index') }}"
+       class="bg-gray-500 text-white px-4 py-2 rounded">
+
+        Limpiar
+
+    </a>
+
+</form>
+
 <div class="max-w-5xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
         
     <h1 class="text-2xl font-bold mb-6">Inventario en tiempo real</h1>

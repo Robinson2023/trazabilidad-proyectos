@@ -2,6 +2,32 @@
 
 @section('content')
 
+<form method="GET" class="flex gap-2 mb-4">
+
+    <input
+        type="text"
+        name="search"
+        value="{{ request('search') }}"
+        placeholder="Buscar trabajador o proyecto..."
+        class="border p-2 rounded flex-1">
+
+    <button
+        type="submit"
+        class="bg-blue-600 text-white px-4 py-2 rounded">
+
+        Buscar
+
+    </button>
+
+    <a href="{{ route('labor.index') }}"
+       class="bg-gray-500 text-white px-4 py-2 rounded">
+
+        Limpiar
+
+    </a>
+
+</form>
+
 <div class="flex justify-between mb-6">
 
     <h1 class="text-2xl font-bold">

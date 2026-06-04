@@ -8,11 +8,25 @@ use Illuminate\Http\Request;
 
 class MaterialController extends Controller
 {
-    public function index()
-    {
-        $materials = Material::all();
-        return view('materials.index', compact('materials'));
+public function index()
+{
+    $query = Material::query();
+
+    if (request('search')) {
+
+        $search = request('search');
+
+        $query->where('name', 'like', "%{$search}%")
+              ->orWhere('code', 'like', "%{$search}%");
     }
+
+    $materials = $query->get();
+
+    return view(
+        'materials.index',
+        compact('materials')
+    );
+}
 
     public function create()
     {
