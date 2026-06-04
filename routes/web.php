@@ -8,10 +8,26 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\globalDashboardController;
 use App\Http\Controllers\MaterialLogController;
+use App\Http\Controllers\UserController;
 
 Route::redirect('/', '/inventory');
 
 Route::middleware('auth')->group(function () {
+
+Route::get(
+    '/users',
+    [UserController::class, 'index']
+)
+->middleware('role:admin')
+->name('users.index');
+
+Route::put(
+    '/users/{user}/role',
+    [UserController::class, 'updateRole']
+)
+->middleware('role:admin')
+->name('users.role');
+
 
     // Warehouse
     Route::post('/warehouse/movement', [WarehouseController::class, 'storeMovement'])
@@ -61,7 +77,10 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::resource('workers', App\Http\Controllers\WorkerController::class);
+Route::resource(
+    'workers',
+    WorkerController::class
+)->middleware('role:admin,management');
 
 Route::get(
     '/labor',
@@ -88,5 +107,7 @@ Route::get(
     '/material-log',
     [MaterialLogController::class, 'index']
 )->name('material-log.index');
+
+
 
 require __DIR__.'/auth.php';

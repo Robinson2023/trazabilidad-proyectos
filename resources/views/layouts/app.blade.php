@@ -163,6 +163,21 @@
 </li>
 
 @endif
+
+@if(auth()->user()->role === 'admin')
+
+<li>
+
+    <a href="{{ route('users.index') }}"
+       class="block hover:bg-gray-700 p-2 rounded">
+
+        👤 Usuarios
+
+    </a>
+
+</li>
+
+@endif
         </ul>
 
     </div>
