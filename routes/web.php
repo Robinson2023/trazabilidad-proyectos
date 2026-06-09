@@ -9,6 +9,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\globalDashboardController;
 use App\Http\Controllers\MaterialLogController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkerController;
 
 Route::redirect('/', '/inventory');
 
@@ -21,12 +22,40 @@ Route::get(
 ->middleware('role:admin')
 ->name('users.index');
 
+Route::get(
+    '/users/create',
+    [UserController::class, 'create']
+)
+->middleware('role:admin')
+->name('users.create');
+
+Route::post(
+    '/users',
+    [UserController::class, 'store']
+)
+->middleware('role:admin')
+->name('users.store');
+
 Route::put(
     '/users/{user}/role',
     [UserController::class, 'updateRole']
 )
 ->middleware('role:admin')
 ->name('users.role');
+
+Route::get(
+    '/users/create',
+    [UserController::class, 'create']
+)
+->middleware('role:admin')
+->name('users.create');
+
+Route::post(
+    '/users',
+    [UserController::class, 'store']
+)
+->middleware('role:admin')
+->name('users.store');
 
 
     // Warehouse

@@ -6,6 +6,17 @@
     Administración de Usuarios
 </h1>
 
+<div class="mb-4">
+
+    <a href="{{ route('users.create') }}"
+       class="bg-green-600 text-white px-4 py-2 rounded">
+
+        ➕ Nuevo Usuario
+
+    </a>
+
+</div>
+
 @if(session('success'))
 
 <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
@@ -33,77 +44,77 @@
 
     <tbody>
 
-    @foreach($users as $user)
+@foreach($users as $user)
 
-        <tr class="border-b">
+<tr class="border-b">
 
-            <td class="p-3">
-                {{ $user->name }}
-            </td>
+    <td class="p-3">
+        {{ $user->name }}
+    </td>
 
-            <td class="p-3">
-                {{ $user->email }}
-            </td>
+    <td class="p-3">
+        {{ $user->email }}
+    </td>
 
-            <td class="p-3">
+    <form
+        method="POST"
+        action="{{ route('users.role', $user) }}">
 
-                <form
-                    method="POST"
-                    action="{{ route('users.role', $user) }}"
-                    class="flex gap-2">
+        @csrf
+        @method('PUT')
 
-                    @csrf
-                    @method('PUT')
+        <td class="p-3">
 
-                    <select
-                        name="role"
-                        class="border p-2 rounded">
+            <select
+                name="role"
+                class="border p-2 rounded">
 
-                        <option value="admin"
-                            @selected($user->role == 'admin')>
-                            Admin
-                        </option>
+                <option value="admin"
+                    @selected($user->role == 'admin')>
+                    Admin
+                </option>
 
-                        <option value="management"
-                            @selected($user->role == 'management')>
-                            Gerencia
-                        </option>
+                <option value="management"
+                    @selected($user->role == 'management')>
+                    Gerencia
+                </option>
 
-                        <option value="warehouse"
-                            @selected($user->role == 'warehouse')>
-                            Almacén
-                        </option>
+                <option value="warehouse"
+                    @selected($user->role == 'warehouse')>
+                    Almacén
+                </option>
 
-                        <option value="supervisor"
-                            @selected($user->role == 'supervisor')>
-                            Supervisor
-                        </option>
+                <option value="supervisor"
+                    @selected($user->role == 'supervisor')>
+                    Supervisor
+                </option>
 
-                        <option value="worker"
-                            @selected($user->role == 'worker')>
-                            Trabajador
-                        </option>
+                <option value="worker"
+                    @selected($user->role == 'worker')>
+                    Trabajador
+                </option>
 
-                    </select>
+            </select>
 
-                    <button
-                        class="bg-blue-600 text-white px-3 py-1 rounded">
+        </td>
 
-                        Guardar
+        <td class="p-3">
 
-                    </button>
+            <button
+                type="submit"
+                class="bg-blue-600 text-white px-3 py-1 rounded">
 
-                </form>
+                Guardar
 
-            </td>
+            </button>
 
-            <td class="p-3">
-                -
-            </td>
+        </td>
 
-        </tr>
+    </form>
 
-    @endforeach
+</tr>
+
+@endforeach
 
     </tbody>
 

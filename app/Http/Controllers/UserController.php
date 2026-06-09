@@ -35,4 +35,33 @@ class UserController extends Controller
             'Rol actualizado'
         );
     }
+
+    public function create()
+{
+    return view('users.create');
+}
+
+public function store(Request $request)
+{
+    $data = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6',
+        'role' => 'required'
+    ]);
+
+    User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => bcrypt($data['password']),
+        'role' => $data['role']
+    ]);
+
+    return redirect()
+        ->route('users.index')
+        ->with(
+            'success',
+            'Usuario creado correctamente'
+        );
+}
 }

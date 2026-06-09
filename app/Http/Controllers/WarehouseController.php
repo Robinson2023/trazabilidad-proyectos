@@ -24,7 +24,6 @@ public function index()
 
     public function storeMovement(Request $request)
     {
-    
         $data = $request->validate([
             
             'type' => 'required|in:in,out,return,adjust',
