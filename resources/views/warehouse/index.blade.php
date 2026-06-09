@@ -128,59 +128,59 @@
     </button>
 
 </form>
-
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {
 
     const input = document.getElementById('material_code');
+    
+    input.addEventListener('keydown', function(e) {
 
-    input.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
 
-        if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
 
-            e.preventDefault();
-            e.stopPropagation();
+        console.log('ENTER DETECTADO');
 
-            const code = this.value.trim();
+        const code = this.value.trim();
 
-            if (!code) return;
+        if (!code) return;
 
-            fetch('/material/' + code)
-                .then(response => response.json())
-                .then(data => {
+        fetch('/material/' + encodeURIComponent(code))
+            .then(response => response.json())
+            .then(data => {
 
-                    if (!data.found) {
+                if (!data.found) {
 
-                        alert('Material no encontrado');
-
-                        document
-                            .getElementById('material-info')
-                            .classList.add('hidden');
-
-                        return;
-                    }
+                    alert('Material no encontrado');
 
                     document
                         .getElementById('material-info')
-                        .classList.remove('hidden');
+                        .classList.add('hidden');
 
-                    document
-                        .getElementById('material-code')
-                        .innerText = data.material.code;
+                    return;
+                }
 
-                    document
-                        .getElementById('material-name')
-                        .innerText = data.material.name;
+                document
+                    .getElementById('material-info')
+                    .classList.remove('hidden');
 
-                });
+                document
+                    .getElementById('material-code')
+                    .innerText = data.material.code;
 
-            return false;
-        }
+                document
+                    .getElementById('material-name')
+                    .innerText = data.material.name;
+            });
+
+        return false;
+    }
+
+});
 
     });
 
 });
-
-</script>
 @endsection

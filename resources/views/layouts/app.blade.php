@@ -178,7 +178,47 @@
 </li>
 
 @endif
+
+      <hr class="border-gray-700 my-4">
+
+<li>
+
+    <div class="text-sm text-gray-300 px-2">
+
+        {{ auth()->user()->name }}
+
+        <br>
+
+        <span class="text-xs uppercase">
+            {{ auth()->user()->role }}
+        </span>
+
+    </div>
+
+</li>
+
+<li>
+
+    <form method="POST"
+          action="{{ route('logout') }}">
+
+        @csrf
+
+        <button
+            type="submit"
+            class="block w-full text-left hover:bg-red-700 p-2 rounded">
+
+            🚪 Cerrar Sesión
+
+        </button>
+
+    </form>
+
+</li>
+
         </ul>
+
+ 
 
     </div>
 
@@ -191,5 +231,6 @@
 
 </div>
 
+ 
 </body>
 </html>

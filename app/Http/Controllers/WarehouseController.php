@@ -52,9 +52,13 @@ public function index()
 
     public function findMaterial($code)
 {
-    $material = Material::where('code', $code)->first();
+    $material = Material::where(
+        'code',
+        $code
+    )->first();
 
     if (!$material) {
+
         return response()->json([
             'found' => false
         ]);
