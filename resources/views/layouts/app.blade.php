@@ -2,7 +2,11 @@
 <html>
 <head>
     <title>Sistema Trazabilidad</title>
-    @vite('resources/css/app.css')
+
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js'
+    ])
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
