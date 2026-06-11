@@ -25,6 +25,7 @@
 
             @if(
     auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'management' ||
     auth()->user()->role === 'warehouse'
 )
 
@@ -33,7 +34,7 @@
     <a href="/warehouse"
         class="block hover:bg-gray-700 p-2 rounded">
 
-        🚚 Warehouse
+        🚚 Almacén
 
     </a>
 
@@ -43,6 +44,7 @@
 
            @if(
     auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'management' ||
     auth()->user()->role === 'warehouse'
 )
 
@@ -59,6 +61,7 @@
 
 @if(
     auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'management' ||
     auth()->user()->role === 'warehouse'
 )
 
@@ -133,7 +136,7 @@
             @if(
     in_array(
         auth()->user()->role,
-        ['admin','worker','supervisor']
+        ['admin','worker','management','supervisor']
     )
 )
 
@@ -152,6 +155,7 @@
 
 @if(
     auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'management' ||
     auth()->user()->role === 'warehouse'
 )
 
@@ -168,7 +172,11 @@
 
 @endif
 
-@if(auth()->user()->role === 'admin')
+@if(
+    auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'management'
+
+)
 
 <li>
 
