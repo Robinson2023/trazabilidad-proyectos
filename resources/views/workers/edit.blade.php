@@ -11,7 +11,11 @@
 
     <input name="role" value="{{ $worker->role }}" class="border p-2 w-full mb-2">
 
-    <input type="number" name="hour_rate"
+    <input type="number" name="salary"
+           value="{{ $worker->salary}}"
+           class="border p-2 w-full mb-2">
+
+            <input type="number" name="hour_rate"
            value="{{ $worker->hour_rate }}"
            class="border p-2 w-full mb-2">
 

@@ -32,18 +32,25 @@ public function index()
         return view('workers.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'role' => 'nullable',
-            'hour_rate' => 'required|numeric|min:0'
-        ]);
+public function store(Request $request)
+{
+    $data = $request->validate([
+        'name' => 'required',
+        'role' => 'required',
+        'salary' => 'required|numeric|min:0',
+    ]);
 
-        Worker::create($request->all());
+    $data['hour_rate'] =
+        ($data['salary'] * 1.53) / 230;
 
-        return redirect()->route('workers.index');
-    }
+    Worker::create($data);
+
+    return redirect()
+        ->route('workers.index')
+        ->with('success', 'Trabajador creado correctamente.');
+}
+
+
 
     public function edit($id)
     {
@@ -51,20 +58,28 @@ public function index()
         return view('workers.edit', compact('worker'));
     }
 
-    public function update(Request $request, $id)
-    {
-        $worker = Worker::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required',
-            'role' => 'nullable',
-            'hour_rate' => 'required|numeric|min:0'
-        ]);
+public function update(Request $request, $id)
+{
+    $worker = Worker::findOrFail($id);
 
-        $worker->update($request->all());
+    $data = $request->validate([
+        'name' => 'required',
+        'role' => 'required',
+        'salary' => 'required|numeric|min:0',
+    ]);
 
-        return redirect()->route('workers.index');
-    }
+    $data['hour_rate'] =
+        ($data['salary'] * 1.53) / 230;
+
+    $worker->update($data);
+
+    return redirect()
+        ->route('workers.index')
+        ->with('success', 'Trabajador actualizado correctamente.');
+}
+
+
 
     public function destroy($id)
     {

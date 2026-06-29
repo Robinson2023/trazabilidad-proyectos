@@ -173,6 +173,26 @@
 @endif
 
 @if(
+    in_array(
+        auth()->user()->role,
+        ['admin','management','warehouse']
+    )
+)
+
+<li>
+
+    <a href="{{ route('subcontractings.index') }}"
+       class="block hover:bg-gray-700 p-2 rounded">
+
+        🤝 Subcontratación
+
+    </a>
+
+</li>
+
+@endif
+
+@if(
     auth()->user()->role === 'admin' ||
     auth()->user()->role === 'management'
 
@@ -190,6 +210,7 @@
 </li>
 
 @endif
+
 
       <hr class="border-gray-700 my-4">
 

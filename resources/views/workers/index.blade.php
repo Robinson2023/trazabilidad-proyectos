@@ -40,48 +40,66 @@
         <tr>
             <th>Nombre</th>
             <th>Rol</th>
+            <th class="p-3">Salario</th> 
             <th>Costo Hora</th>
-            <th>Acciones</th>
+            <th class="p-3">Acciones</th>
         </tr>
     </thead>
 
-    <tbody>
-        @foreach($workers as $worker)
-        <tr>
-            <td>{{ $worker->name }}</td>
-            <td>{{ $worker->role }}</td>
-            <td>${{ $worker->hour_rate }}</td>
-<td class="space-x-2">
+<tbody>
 
-<a
-href="{{ route('workers.edit',$worker->id) }}"
-class="bg-yellow-500 text-white px-3 py-1 rounded">
+    @foreach($workers as $worker)
 
-Editar
+    <tr>
 
-</a>
+        <td class="p-3">
+            {{ $worker->name }}
+        </td>
 
-<form
-method="POST"
-action="{{ route('workers.destroy',$worker->id) }}"
-class="inline">
+        <td class="p-3">
+            {{ $worker->role }}
+        </td>
 
-@csrf
-@method('DELETE')
+        <td class="p-3">
+            ${{ number_format($worker->salary, 0, ',', '.') }}
+        </td>
 
-<button
-class="bg-red-500 text-white px-3 py-1 rounded">
+        <td>${{ $worker->hour_rate }}</td>
 
-Eliminar
+        <td class="p-3 space-x-2">
 
-</button>
+            <a
+                href="{{ route('workers.edit', $worker->id) }}"
+                class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
 
-</form>
+                Editar
 
-</td>
-        </tr>
-        @endforeach
-    </tbody>
+            </a>
+
+        <form method="POST"
+      action="{{ route('workers.destroy', $worker->id) }}"
+      class="inline"
+      onsubmit="return confirm('¿Está seguro de eliminar este trabajador? Esta acción no se puede deshacer.')">
+
+            @csrf
+             @method('DELETE')
+
+            <button
+                 class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+
+                     Eliminar
+
+            </button>
+
+    </form>
+
+        </td>
+
+    </tr>
+
+    @endforeach
+
+</tbody>
 </table>
 
 @endsection

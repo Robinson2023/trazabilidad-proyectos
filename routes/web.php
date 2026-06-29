@@ -11,6 +11,7 @@ use App\Http\Controllers\MaterialLogController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Controllers\LaborEntryController;
+use App\Http\Controllers\SubcontractingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -232,5 +233,10 @@ Route::get('/dashboard', function () {
     'auth',
     'verified'
 ])->name('dashboard');
+
+Route::resource(
+    'subcontractings',
+    SubcontractingController::class
+);
 
 require __DIR__.'/auth.php';

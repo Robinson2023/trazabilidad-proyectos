@@ -64,32 +64,54 @@
             <td class="p-3">{{ $project->client }}</td>
             <td class="p-3">{{ $project->status }}</td>
 
-            <td class="p-3 space-x-2">
+<td class="p-4">
 
-                <a href="/projects/{{ $project->id }}/dashboard"
-                   class="text-blue-500">
-                    Dashboard
-                </a>
+    <div class="flex flex-wrap gap-2 justify-center">
 
-                <a href="/projects/{{ $project->id }}/workers"
-                   class="text-green-500">
-                    Workers
-                </a>
+        <a href="{{ route('projects.dashboard', $project) }}"
+           class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm font-medium">
 
-                <td>
-        <a href="{{ route('projects.edit', $project->id) }}">
-            Editar
+            Dashboard
+
         </a>
 
-        <form method="POST" action="{{ route('projects.destroy', $project->id) }}">
+        <a href="{{ url('/projects/'.$project->id.'/workers') }}"
+           class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm font-medium">
+
+            Workers
+
+        </a>
+
+        <a href="{{ route('projects.edit', $project) }}"
+           class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded text-sm font-medium">
+
+            Editar
+
+        </a>
+
+        <form method="POST"
+            action="{{ route('projects.destroy', $project) }}"
+            class="inline"
+            onsubmit="return confirm('¿Está seguro de eliminar este proyecto? Esta acción no se puede deshacer.')">
+
             @csrf
             @method('DELETE')
 
-            <button>Eliminar</button>
-        </form>
-    </td>
+            <button type="submit"
+                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm font-medium">
 
-            </td>
+                Eliminar
+
+            </button>
+
+        </form>
+
+
+
+    </div>
+
+</td>
+
         </tr>
 
         @endforeach

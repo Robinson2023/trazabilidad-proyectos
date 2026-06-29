@@ -7,14 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     protected $fillable = [
-        'name',
-        'budget',
-        'client',
-        'status',
-        'estimated_hours',
-        'start_date',
-        'end_date'
-    ];
+    'name',
+    'budget',
+    'client',
+    'status',
+    'estimated_hours',
+    'start_date',
+    'end_date',
+
+    'administrative_cost',
+    'transport_cost',
+    'food_cost',
+    'other_cost',
+    'other_description'
+];
 
     public function movements()
     {
@@ -32,4 +38,9 @@ class Project extends Model
     {
         return $this->hasMany(LaborEntry::class);
     }
+
+    public function subcontractings()
+{
+    return $this->hasMany(Subcontracting::class);
+}
 }

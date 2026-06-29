@@ -75,7 +75,8 @@
 
                 <form method="POST"
                       action="{{ route('materials.destroy', $material->id) }}"
-                      class="inline">
+                      class="inline"
+                      onsubmit="return confirm('¿Está seguro de eliminar este trabajador? Esta acción no se puede deshacer.')">
 
                     @csrf
                     @method('DELETE')

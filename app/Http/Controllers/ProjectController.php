@@ -81,8 +81,15 @@ public function store(Request $request)
         'name' => 'required',
         'client' => 'nullable',
         'budget' => 'nullable|numeric',
-        'estimated_hours' => 'nullable|numeric'
+        'estimated_hours' => 'nullable|numeric',
+        'administrative_cost' => 'nullable|numeric',
+        'transport_cost'      => 'nullable|numeric',
+        'food_cost'           => 'nullable|numeric',
+        'other_cost'          => 'nullable|numeric',
+        'other_description'   => 'nullable|string|max:255'
     ]);
+
+    Project::create($request->all());
 
     Project::create($request->only([
         'name','client','budget','estimated_hours'
@@ -96,8 +103,16 @@ public function projectDashboard(Project $project)
     $project->load([
     'movements.material',
     'workers',
-    'laborEntries.worker'
+    'laborEntries.worker',
+    'subcontractings'
 ]);
+
+$workerCost = $project->laborEntries->sum(function ($entry) {
+    return $entry->hours * $entry->worker->hour_rate;
+});
+
+// 🤝 COSTO SUBCONTRATACIÓN
+$subcontractCost = $project->subcontractings->sum('amount');
 
     $movements = $project->movements->where('type', 'out');
 
@@ -144,7 +159,17 @@ $workerCost = $project->laborEntries->sum(function ($entry) {
 });
 
 // 💰 COSTO TOTAL REAL
-$realCost = $totalCost + $workerCost;
+$totalIndirect =
+    ($project->administrative_cost ?? 0) +
+    ($project->transport_cost ?? 0) +
+    ($project->food_cost ?? 0) +
+    ($project->other_cost ?? 0);
+
+$realCost =
+    $totalCost +
+    $workerCost +
+    $totalIndirect +
+    $subcontractCost;
 
   // PRESUPUESTO
     $budget = $project->budget ?? 0;
@@ -185,7 +210,8 @@ return view('projects.dashboard', compact(
     'realCost',
     'plannedHours',
     'realHours',
-    'laborEntries'
+    'laborEntries',
+    'subcontractCost'
 ));
 }
 public function show(Project $project)
@@ -204,12 +230,25 @@ public function update(Request $request, Project $project)
         'name' => 'required',
         'client' => 'nullable',
         'budget' => 'nullable|numeric',
-        'estimated_hours' => 'nullable|numeric'
+        'estimated_hours' => 'nullable|numeric',
+        'administrative_cost' => 'nullable|numeric',
+        'transport_cost'      => 'nullable|numeric',
+        'food_cost'           => 'nullable|numeric',
+        'other_cost'          => 'nullable|numeric',
+        'other_description'   => 'nullable|string|max:255'
     ]);
 
-    $project->update($request->only([
-        'name','client','budget','estimated_hours'
-    ]));
+   $project->update($request->only([
+    'name',
+    'client',
+    'budget',
+
+    'administrative_cost',
+    'transport_cost',
+    'food_cost',
+    'other_cost',
+    'other_description'
+]));
 
     return redirect()->route('projects.index');
 }
