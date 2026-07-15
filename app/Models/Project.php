@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     protected $fillable = [
+
     'name',
     'budget',
     'client',
@@ -19,7 +20,11 @@ class Project extends Model
     'transport_cost',
     'food_cost',
     'other_cost',
-    'other_description'
+    'other_description',
+
+    // NUEVOS
+    'product_id',
+    'quantity',
 ];
 
     public function movements()
@@ -42,5 +47,15 @@ class Project extends Model
     public function subcontractings()
 {
     return $this->hasMany(Subcontracting::class);
+}
+
+public function product()
+{
+    return $this->belongsTo(Product::class);
+}
+
+public function productionItems()
+{
+    return $this->hasMany(ProductionItem::class);
 }
 }

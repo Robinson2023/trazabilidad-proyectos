@@ -12,6 +12,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Controllers\LaborEntryController;
 use App\Http\Controllers\SubcontractingController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductStepController;
+use App\Http\Controllers\ProductionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +25,16 @@ use App\Http\Controllers\SubcontractingController;
 Route::get('/', function () {
 
     return auth()->check()
-        ? redirect('/inventory')
+        ? redirect()->route('home')
         : redirect('/login');
 
 });
+
+Route::get('/home', function () {
+
+    return view('home');
+
+})->middleware('auth')->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -238,5 +247,37 @@ Route::resource(
     'subcontractings',
     SubcontractingController::class
 );
+
+Route::resource('products', ProductController::class);
+
+Route::resource(
+    'products.steps',
+    ProductStepController::class
+);
+
+Route::get(
+    '/projects/{project}/production',
+    [ProductionController::class, 'index']
+)->name('production.index');
+
+Route::get(
+    '/production/{item}',
+    [ProductionController::class, 'show']
+)->name('production.show');
+
+Route::patch(
+    '/production-step/{step}/complete',
+    [ProductionController::class, 'completeStep']
+)->name('production.complete-step');
+
+Route::get(
+    '/projects/{project}/production/add',
+    [ProjectController::class, 'addProduction']
+)->name('projects.production.add');
+
+Route::post(
+    '/projects/{project}/production/add',
+    [ProjectController::class, 'storeProduction']
+)->name('projects.production.store');
 
 require __DIR__.'/auth.php';

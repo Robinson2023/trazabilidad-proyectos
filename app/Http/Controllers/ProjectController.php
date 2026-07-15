@@ -6,6 +6,10 @@ use App\Models\Project;
 use App\Models\Movement;
 use Illuminate\Http\Request;
 use App\Models\Worker;
+use App\Models\Product;
+use App\Models\ProductionItem;
+use App\Models\ProductionItemStep;
+use App\Models\ProductStep;
 
 class ProjectController extends Controller
 {
@@ -70,32 +74,86 @@ public function index()
         compact('projects')
     );
 }
+
 public function create()
 {
-    return view('projects.create');
-}
+    $products = Product::where('active', 1)
+        ->orderBy('name')
+        ->get();
 
+    return view(
+        'projects.create',
+        compact('products')
+    );
+}
 public function store(Request $request)
 {
-    $request->validate([
+    $data = $request->validate([
+
         'name' => 'required',
+
         'client' => 'nullable',
+
+        'product_id' => 'required|exists:products,id',
+
+        'quantity' => 'required|integer|min:1',
+
         'budget' => 'nullable|numeric',
+
         'estimated_hours' => 'nullable|numeric',
+
         'administrative_cost' => 'nullable|numeric',
-        'transport_cost'      => 'nullable|numeric',
-        'food_cost'           => 'nullable|numeric',
-        'other_cost'          => 'nullable|numeric',
-        'other_description'   => 'nullable|string|max:255'
+
+        'transport_cost' => 'nullable|numeric',
+
+        'food_cost' => 'nullable|numeric',
+
+        'other_cost' => 'nullable|numeric',
+
+        'other_description' => 'nullable|string|max:255',
+
     ]);
 
-    Project::create($request->all());
+    $project = Project::create($data);
 
-    Project::create($request->only([
-        'name','client','budget','estimated_hours'
-    ]));
+for ($i = 1; $i <= $project->quantity; $i++) {
 
-    return redirect()->route('projects.index');
+    $item = ProductionItem::create([
+
+        'project_id' => $project->id,
+
+        'product_id' => $project->product_id,
+
+        'code' => str_pad($i, 3, '0', STR_PAD_LEFT),
+
+        'status' => 'pending',
+
+    ]);
+
+    $steps = ProductStep::where(
+        'product_id',
+        $project->product_id
+    )->orderBy('order')->get();
+
+    foreach ($steps as $step) {
+
+        ProductionItemStep::create([
+
+            'production_item_id' => $item->id,
+
+            'product_step_id' => $step->id,
+
+            'status' => 'pending'
+
+        ]);
+
+    }
+
+}
+
+    return redirect()
+        ->route('projects.index')
+        ->with('success', 'Proyecto creado correctamente.');
 }
 
 public function projectDashboard(Project $project)
@@ -216,42 +274,68 @@ return view('projects.dashboard', compact(
 }
 public function show(Project $project)
 {
-    return view('projects.show', compact('project'));
+    return view(
+        'projects.show',
+        compact('project')
+    );
 }
 
 public function edit(Project $project)
 {
-    return view('projects.edit', compact('project'));
+    $products = Product::where('active', true)
+        ->orderBy('name')
+        ->get();
+
+    $productionCreated = $project->productionItems()->exists();
+
+    return view(
+        'projects.edit',
+        compact(
+            'project',
+            'products',
+            'productionCreated'
+        )
+    );
 }
 
 public function update(Request $request, Project $project)
 {
-    $request->validate([
+    $data = $request->validate([
+
         'name' => 'required',
+
         'client' => 'nullable',
+
+        'product_id' => 'required|exists:products,id',
+
         'budget' => 'nullable|numeric',
+
         'estimated_hours' => 'nullable|numeric',
+
         'administrative_cost' => 'nullable|numeric',
-        'transport_cost'      => 'nullable|numeric',
-        'food_cost'           => 'nullable|numeric',
-        'other_cost'          => 'nullable|numeric',
-        'other_description'   => 'nullable|string|max:255'
+
+        'transport_cost' => 'nullable|numeric',
+
+        'food_cost' => 'nullable|numeric',
+
+        'other_cost' => 'nullable|numeric',
+
+        'other_description' => 'nullable|string|max:255',
+
     ]);
 
-   $project->update($request->only([
-    'name',
-    'client',
-    'budget',
+    $project->update($data);
 
-    'administrative_cost',
-    'transport_cost',
-    'food_cost',
-    'other_cost',
-    'other_description'
-]));
+    // Actualizar todas las unidades de fabricación
+    $project->productionItems()->update([
+        'product_id' => $project->product_id,
+    ]);
 
-    return redirect()->route('projects.index');
+    return redirect()
+        ->route('projects.index')
+        ->with('success','Proyecto actualizado correctamente.');
 }
+
 public function destroy(Project $project)
 {
     $project->delete();
@@ -372,4 +456,87 @@ public function storeWorkers(Request $request, Project $project)
     return redirect()->route('projects.dashboard', $project);
 }
 
+public function addProduction(Project $project)
+{
+    $products = Product::where('active',1)
+                ->orderBy('name')
+                ->get();
+
+    return view(
+        'projects.add-production',
+        compact('project','products')
+    );
 }
+
+public function storeProduction(Request $request, Project $project)
+{
+    $request->validate([
+
+        'product_id' => 'required|exists:products,id',
+
+        'quantity' => 'required|integer|min:1',
+
+    ]);
+
+    $product = Product::findOrFail($request->product_id);
+
+$quantity = $request->quantity;
+
+$lastItem = ProductionItem::where('project_id', $project->id)
+    ->orderByDesc('id')
+    ->first();
+
+$next = 1;
+
+if ($lastItem) {
+
+    $next = intval($lastItem->code) + 1;
+
+}
+
+for ($i = 0; $i < $quantity; $i++) {
+
+    $item = ProductionItem::create([
+
+        'project_id' => $project->id,
+
+        'product_id' => $product->id,
+
+        'code' => str_pad($next + $i,3,'0',STR_PAD_LEFT),
+
+        'status' => 'pending',
+
+    ]);
+
+    $steps = ProductStep::where('product_id',$product->id)
+            ->orderBy('order')
+            ->get();
+
+    foreach($steps as $step){
+
+        ProductionItemStep::create([
+
+            'production_item_id'=>$item->id,
+
+            'product_step_id'=>$step->id,
+
+            'status'=>'pending'
+
+        ]);
+
+    }
+
+}
+
+// ← EL FOR TERMINA AQUÍ
+
+return redirect()
+    ->route('production.index',$project)
+    ->with(
+        'success',
+        'Producción agregada correctamente.'
+    );
+}
+
+}
+

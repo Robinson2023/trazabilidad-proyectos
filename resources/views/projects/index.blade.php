@@ -68,26 +68,13 @@
 
     <div class="flex flex-wrap gap-2 justify-center">
 
-        <a href="{{ route('projects.dashboard', $project) }}"
-           class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm font-medium">
+        <a
+href="{{ route('projects.show',$project) }}"
+class="bg-blue-600 text-white px-4 py-2 rounded">
 
-            Dashboard
+👁 Abrir
 
-        </a>
-
-        <a href="{{ url('/projects/'.$project->id.'/workers') }}"
-           class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm font-medium">
-
-            Workers
-
-        </a>
-
-        <a href="{{ route('projects.edit', $project) }}"
-           class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded text-sm font-medium">
-
-            Editar
-
-        </a>
+</a>
 
         <form method="POST"
             action="{{ route('projects.destroy', $project) }}"

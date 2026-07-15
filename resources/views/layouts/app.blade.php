@@ -19,7 +19,12 @@
     <!-- SIDEBAR -->
     <div class="w-64 bg-gray-900 text-white p-4">
 
-        <h2 class="text-xl font-bold mb-6">Indumet CORP SAS</h2>
+        <a href="{{ route('home') }}"
+   class="block text-xl font-bold mb-6 hover:text-blue-300 transition">
+
+    🏭 INDUMET CORP SAS
+
+    </a>
 
         <ul class="space-y-3">
 
@@ -72,6 +77,17 @@
         📦 Crear Materiales
 
     </a>
+</li>
+
+<li>
+
+    <a href="{{ route('products.index') }}"
+       class="block hover:bg-gray-700 p-2 rounded">
+
+        📚 Productos
+
+    </a>
+
 </li>
 
 @endif
