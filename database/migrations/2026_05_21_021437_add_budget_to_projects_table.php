@@ -9,20 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('projects', function (Blueprint $table) {
-            //
-        });
-    }
+ public function up(): void
+{
+    Schema::table('projects', function (Blueprint $table) {
+
+        $table->decimal('budget',12,2)
+              ->default(0);
+
+    });
+}
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::table('projects', function (Blueprint $table) {
-            //
-        });
-    }
+public function down(): void
+{
+    Schema::table('projects', function (Blueprint $table) {
+
+        $table->dropColumn('budget');
+
+    });
+}
 };

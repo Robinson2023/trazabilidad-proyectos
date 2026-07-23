@@ -15,7 +15,9 @@ use App\Http\Controllers\SubcontractingController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductStepController;
 use App\Http\Controllers\ProductionController;
-
+use App\Http\Controllers\GasEquipmentController;
+use App\Http\Controllers\GasCylinderController;
+use App\Http\Controllers\GasSettingController;
 /*
 |--------------------------------------------------------------------------
 | Ruta principal
@@ -279,5 +281,25 @@ Route::post(
     '/projects/{project}/production/add',
     [ProjectController::class, 'storeProduction']
 )->name('projects.production.store');
+
+Route::resource(
+    'gas-equipments',
+    GasEquipmentController::class
+);
+
+Route::resource(
+    'gas-cylinders',
+    GasCylinderController::class
+);
+
+Route::get(
+    '/gas-settings',
+    [GasSettingController::class,'index']
+)->name('gas-settings.index');
+
+Route::put(
+    '/gas-settings',
+    [GasSettingController::class,'update']
+)->name('gas-settings.update');
 
 require __DIR__.'/auth.php';

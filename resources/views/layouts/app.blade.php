@@ -216,6 +216,22 @@
 
 <li>
 
+<a href="{{ route('gas-cylinders.index') }}">
+    🟢 Cilindros
+</a>
+
+</li>
+
+@endif
+
+@if(
+    auth()->user()->role === 'admin' ||
+    auth()->user()->role === 'management'
+
+)
+
+<li>
+
     <a href="{{ route('users.index') }}"
        class="block hover:bg-gray-700 p-2 rounded">
 
