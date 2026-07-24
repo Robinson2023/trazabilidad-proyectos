@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ProductionItem;
 
 class Product extends Model
 {
@@ -22,6 +23,11 @@ class Product extends Model
     public function projects()
 {
     return $this->hasMany(Project::class);
+}
+
+    public function productionItems()
+{
+    return $this->hasMany(ProductionItem::class);
 }
 
 }

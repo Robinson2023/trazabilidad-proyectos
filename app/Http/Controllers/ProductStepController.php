@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductStep;
 use Illuminate\Http\Request;
+use App\Services\ProductionSynchronizationService;
 
 class ProductStepController extends Controller
 {
@@ -87,4 +88,26 @@ public function create(Product $product)
     {
         //
     }
+
+    public function sync(
+    Product $product,
+    ProductionSynchronizationService $service
+)
+{
+    $created = $service->sync($product);
+
+    if ($created == 0) {
+
+        return back()->with(
+            'success',
+            'Todos los procesos ya estaban sincronizados.'
+        );
+
+    }
+
+    return back()->with(
+        'success',
+        "Sincronización completada. Se agregaron {$created} procesos nuevos."
+    );
+}
 }

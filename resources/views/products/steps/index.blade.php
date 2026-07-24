@@ -66,6 +66,24 @@
             </div>
 
         </form>
+<br>
+        <form
+            action="{{ route('products.steps.sync', $product) }}"
+            method="POST"
+            class="inline">
+
+            @csrf
+
+            <button
+                type="submit"
+                onclick="return confirm('¿Desea sincronizar los procesos con todas las unidades de producción existentes?')"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow">
+
+                🔄 Sincronizar Producción
+
+            </button>
+
+        </form>
 
     </div>
 

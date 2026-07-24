@@ -56,6 +56,12 @@ Modelo
 
 </th>
 
+<th class="px-4 py-3">
+
+Responsable
+
+</th>
+
 <th class="p-4">
 
 Estado
@@ -93,6 +99,12 @@ Acciones
 <td class="text-center">
 
 {{ $equipment->model }}
+
+</td>
+
+<td class="px-4 py-3">
+
+    {{ $equipment->worker?->name ?? 'Sin asignar' }}
 
 </td>
 

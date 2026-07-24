@@ -40,6 +40,28 @@ public function completeStep(ProductionItemStep $step)
         'status' => 'completed'
     ]);
 
+    $item = $step->productionItem;
+
+    $total = $item->steps()->count();
+
+    $completed = $item->steps()
+        ->where('status', 'completed')
+        ->count();
+
+    $status = 'pending';
+
+    if ($completed > 0 && $completed < $total) {
+        $status = 'in_progress';
+    }
+
+    if ($completed == $total) {
+        $status = 'completed';
+    }
+
+    $item->update([
+        'status' => $status
+    ]);
+
     return back()->with(
         'success',
         'Proceso completado.'

@@ -63,28 +63,22 @@
 
                 <p class="text-gray-500">Estado</p>
 
-                @if($item->status=='pending')
+                @if($item->status == 'completed')
 
-                    <span class="inline-block px-4 py-2 rounded-full bg-gray-100">
-
-                        ⚪ Pendiente
-
+                    <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full">
+                        🟢 Finalizado
                     </span>
 
-                @elseif($item->status=='in_progress')
+                @elseif($item->status == 'in_progress')
 
-                    <span class="inline-block px-4 py-2 rounded-full bg-yellow-100 text-yellow-700">
-
+                    <span class="bg-yellow-100 text-yellow-700 px-4 py-1 rounded-full">
                         🟡 En proceso
-
                     </span>
 
                 @else
 
-                    <span class="inline-block px-4 py-2 rounded-full bg-green-100 text-green-700">
-
-                        🟢 Terminado
-
+                    <span class="bg-gray-100 text-gray-700 px-4 py-1 rounded-full">
+                        ⚪ Pendiente
                     </span>
 
                 @endif

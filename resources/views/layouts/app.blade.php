@@ -209,16 +209,19 @@
 @endif
 
 @if(
-    auth()->user()->role === 'admin' ||
-    auth()->user()->role === 'management'
-
+    in_array(
+        auth()->user()->role,
+         ['admin','management']
+    )
 )
 
 <li>
 
-<a href="{{ route('gas-cylinders.index') }}">
-    🟢 Cilindros
-</a>
+    <a href="{{ route('gas-cylinders.index') }}"
+    class="block hover:bg-gray-700 p-2 rounded">
+
+        🟢 Cilindros
+    </a>
 
 </li>
 

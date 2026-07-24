@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ProductionItemStep;
 
 class ProductionItemStep extends Model
 {
@@ -24,19 +23,4 @@ class ProductionItemStep extends Model
     {
         return $this->belongsTo(ProductStep::class);
     }
-
-    public function completeStep(ProductionItemStep $step)
-{
-    $step->update([
-
-        'status' => 'completed'
-
-    ]);
-
-    return back()->with(
-        'success',
-        'Proceso completado.'
-    );
-}
-
 }

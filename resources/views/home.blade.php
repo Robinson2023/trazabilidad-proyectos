@@ -73,7 +73,7 @@
             </div>
 
         </div>
-
+<br>
         {{-- Video --}}
         <div class="bg-white rounded-xl shadow p-4">
 
@@ -83,25 +83,58 @@
 
             </h3>
 
-            <iframe
-                class="w-full h-64 rounded"
-                src="https://youtube.com/shorts/RTJ_MR3zI-E"
-                allowfullscreen>
+        <iframe
+             class="w-full h-64 rounded"
+            src="https://www.youtube.com/embed/yFKBQrUOUt0"
+            title="Video"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+        </iframe>
 
-            </iframe>
+        </div>
+<br>
+        {{-- Noticias --}}
+
+<div class="bg-white rounded-xl shadow p-6">
+
+    <h3 class="font-bold text-lg mb-4">
+        📰 Actualidad Industrial
+    </h3>
+
+    @forelse($news as $item)
+
+        <div class="border-b py-3">
+
+            <a href="{{ $item['link'] }}"
+               target="_blank"
+               class="font-semibold text-blue-600 hover:underline">
+
+                {{ $item['title'] }}
+
+            </a>
+
+            <p class="text-sm text-gray-500">
+
+                {{ \Carbon\Carbon::parse($item['date'])->format('d/m/Y') }}
+
+            </p>
 
         </div>
 
-        {{-- Noticias --}}
-        <div class="bg-white rounded-xl shadow p-6">
+    @empty
 
-            <h3 class="font-bold text-lg mb-4">
+        <p class="text-gray-500">
 
-                📰 Noticias
+            No hay noticias disponibles.
 
-            </h3>
+        </p>
 
-            <ul class="space-y-4 text-gray-700">
+    @endforelse
+
+</div>
+<br>
+<ul class="space-y-4 text-gray-700">
 
                 <li>
                     🇨🇴 Economía colombiana continúa mostrando crecimiento industrial.

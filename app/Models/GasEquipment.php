@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Worker;
 
 class GasEquipment extends Model
 {
@@ -14,6 +15,7 @@ class GasEquipment extends Model
         'name',
         'brand',
         'model',
+        'worker_id',
         'active',
 
     ];
@@ -22,4 +24,10 @@ class GasEquipment extends Model
     {
         return $this->hasMany(GasCylinder::class, 'equipment_id');
     }
+
+    public function worker()
+{
+    return $this->belongsTo(Worker::class);
+}
+
 }

@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\GasEquipment;
 use Illuminate\Http\Request;
+use App\Models\Worker;
 
 class GasEquipmentController extends Controller
 {
     public function index()
     {
-        $equipments = GasEquipment::orderBy('id')->get();
+        $equipments = GasEquipment::with('worker')
+            ->orderBy('id')
+            ->get();
 
         return view(
             'gas-equipments.index',
@@ -19,22 +22,29 @@ class GasEquipmentController extends Controller
 
     public function create()
     {
-        return view('gas-equipments.create');
+        $workers = Worker::orderBy('name')->get();
+
+        return view(
+            'gas-equipments.create',
+            compact('workers')
+        );
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
 
-            'code'  => 'required|unique:gas_equipments,code',
+            'code'      => 'required|unique:gas_equipments,code',
 
-            'name'  => 'required|max:100',
+            'name'      => 'required|max:100',
 
-            'brand' => 'nullable|max:100',
+            'brand'     => 'nullable|max:100',
 
-            'model' => 'nullable|max:100',
+            'model'     => 'nullable|max:100',
 
-            'active'=> 'nullable'
+            'worker_id' => 'nullable|exists:workers,id',
+
+            'active'    => 'nullable'
 
         ]);
 
@@ -51,26 +61,33 @@ class GasEquipmentController extends Controller
     }
 
     public function edit(GasEquipment $gasEquipment)
-    {
-        return view(
-            'gas-equipments.edit',
-            compact('gasEquipment')
-        );
-    }
+        {
+            $workers = Worker::orderBy('name')->get();
+
+            return view(
+                'gas-equipments.edit',
+                compact(
+                    'gasEquipment',
+                    'workers'
+                )
+            );
+        }
 
     public function update(Request $request, GasEquipment $gasEquipment)
     {
         $data = $request->validate([
 
-            'code'  => 'required|unique:gas_equipments,code,' . $gasEquipment->id,
+            'code'      => 'required|unique:gas_equipments,code,' . $gasEquipment->id,
 
-            'name'  => 'required|max:100',
+            'name'      => 'required|max:100',
 
-            'brand' => 'nullable|max:100',
+            'brand'     => 'nullable|max:100',
 
-            'model' => 'nullable|max:100',
+            'model'     => 'nullable|max:100',
 
-            'active'=> 'nullable'
+            'worker_id' => 'nullable|exists:workers,id',
+
+            'active'    => 'nullable'
 
         ]);
 

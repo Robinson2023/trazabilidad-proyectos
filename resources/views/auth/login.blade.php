@@ -12,17 +12,55 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+<!-- Password -->
+<div class="mt-4">
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+    <x-input-label for="password" :value="__('Password')" />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    <div class="relative mt-1">
+
+        <x-text-input
+            id="password"
+            class="block w-full pr-10"
+            type="password"
+            name="password"
+            required
+            autocomplete="current-password" />
+
+        <button
+            type="button"
+            onclick="togglePassword()"
+            class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700">
+
+            👁
+
+        </button>
+
+    </div>
+
+    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+
+</div>
+
+<script>
+
+function togglePassword() {
+
+    const input = document.getElementById('password');
+
+    if (input.type === 'password') {
+
+        input.type = 'text';
+
+    } else {
+
+        input.type = 'password';
+
+    }
+
+}
+
+</script>
 
         <!-- Remember Me -->
         <div class="block mt-4">

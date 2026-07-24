@@ -18,6 +18,8 @@ use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\GasEquipmentController;
 use App\Http\Controllers\GasCylinderController;
 use App\Http\Controllers\GasSettingController;
+use App\Services\NewsService;
+
 /*
 |--------------------------------------------------------------------------
 | Ruta principal
@@ -34,7 +36,9 @@ Route::get('/', function () {
 
 Route::get('/home', function () {
 
-    return view('home');
+    $news = app(NewsService::class)->getNews();
+
+    return view('home', compact('news'));
 
 })->middleware('auth')->name('home');
 
@@ -301,5 +305,11 @@ Route::put(
     '/gas-settings',
     [GasSettingController::class,'update']
 )->name('gas-settings.update');
+
+Route::post(
+    '/products/{product}/steps/sync',
+    [ProductStepController::class,'sync']
+)->name('products.steps.sync');
+
 
 require __DIR__.'/auth.php';

@@ -126,6 +126,36 @@
 
             </div>
 
+            <div>
+
+                <label class="font-semibold">
+                    Responsable
+                </label>
+
+                <select
+                    name="worker_id"
+                    class="w-full mt-2 border rounded-lg p-3">
+
+                    <option value="">
+                        Sin asignar
+                    </option>
+
+                    @foreach($workers as $worker)
+
+                        <option
+                            value="{{ $worker->id }}"
+                            {{ old('worker_id') == $worker->id ? 'selected' : '' }}>
+
+                            {{ $worker->name }}
+
+                        </option>
+
+                    @endforeach
+
+                </select>
+
+            </div>
+
         </div>
 
         <div>
