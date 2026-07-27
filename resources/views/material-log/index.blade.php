@@ -12,12 +12,41 @@
         class="border p-2 rounded flex-1">
 
     <button
+
         type="submit"
         class="bg-blue-600 text-white px-4 py-2 rounded">
 
         Buscar
 
     </button>
+
+    <select
+    name="type"
+    class="border rounded px-3 py-2">
+
+    <option value="">Todos los movimientos</option>
+
+    <option value="in"
+        {{ request('type') == 'in' ? 'selected' : '' }}>
+        Entrada
+    </option>
+
+    <option value="out"
+        {{ request('type') == 'out' ? 'selected' : '' }}>
+        Salida
+    </option>
+
+    <option value="return"
+        {{ request('type') == 'return' ? 'selected' : '' }}>
+        Devolución
+    </option>
+
+    <option value="adjust"
+        {{ request('type') == 'adjust' ? 'selected' : '' }}>
+        Ajuste
+    </option>
+
+</select>
 
     <a href="{{ route('material-log.index') }}"
        class="bg-gray-500 text-white px-4 py-2 rounded">
@@ -41,6 +70,8 @@
             <th class="p-3">Fecha</th>
 
             <th class="p-3">Proyecto</th>
+
+            <th class="p-3">Movimiento</th>
 
             <th class="p-3">Material</th>
 
@@ -66,6 +97,41 @@
 
             <td class="p-3">
                 {{ $movement->project?->name ?? '-' }}
+            </td>
+
+            <td class="px-4 py-3">
+
+                @switch($movement->type)
+
+                    @case('in')
+                        <span class="text-green-600 font-semibold">
+                            Entrada
+                        </span>
+                        @break
+
+                    @case('out')
+                        <span class="text-red-600 font-semibold">
+                            Salida
+                        </span>
+                        @break
+
+                    @case('return')
+                        <span class="text-yellow-600 font-semibold">
+                            Devolución
+                        </span>
+                        @break
+
+                    @case('adjust')
+                        <span class="text-blue-600 font-semibold">
+                            Ajuste
+                        </span>
+                        @break
+
+                    @default
+                        {{ $movement->type }}
+
+                @endswitch
+
             </td>
 
             <td class="p-3">

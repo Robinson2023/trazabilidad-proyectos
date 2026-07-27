@@ -42,6 +42,7 @@
                 <th>Unidad</th>
                 <th>Stock</th>
                 <th>Precio Unitario</th>
+                <th>Estado</th>
             </tr>
         </thead>
 
@@ -59,17 +60,36 @@
 
                     <td>{{ $material->base_cost }}</td>
 
+               
                     <td>
-    <span class="
-        @if($material->status == 'critical') text-red-600
-        @elseif($material->status == 'low') text-yellow-600
-        @else text-green-600
-        @endif
-        font-bold
-    ">
-        {{ $material->stock }}
-    </span>
-</td>
+
+                        @if($material->status=='ok')
+
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+
+                        🟢 Disponible
+
+                        </span>
+
+                        @elseif($material->status=='warning')
+
+                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+
+                        🟡 Stock Bajo
+
+                        </span>
+
+                        @else
+
+                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+
+                        🔴 Crítico
+
+                        </span>
+
+                        @endif
+
+                        </td>
                 </tr>
             @endforeach
         </tbody>

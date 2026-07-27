@@ -14,7 +14,9 @@ class Material extends Model
     'purchase_unit',
     'purchase_quantity',
     'purchase_cost',
-    'initial_quantity'
+    'initial_quantity',
+    'warning_stock',
+    'critical_stock'
 ];
 
     public function inventory()

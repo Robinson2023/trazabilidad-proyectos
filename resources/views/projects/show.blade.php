@@ -132,6 +132,28 @@
 ])
 
 
+<a href="{{ route('projects.assignWorkers', $project) }}"
+   class="bg-indigo-600 text-white px-4 py-2 rounded">
+
+    👷 Asignar Horas de Trabajo
+
+</a>
+
+
+@include('components.module-card',[
+
+'url'=>route('projects.assignWorkers',$project),
+
+'icon'=>'👷',
+
+'title'=>'Agregar Técnicos',
+
+'description'=>'Agregar horas estimadas de los técnicos.',
+
+'color'=>'bg-green-500'
+
+])
+
 
 @include('components.module-card',[
 

@@ -36,6 +36,13 @@ public function index()
 
         $material = Material::where('code', $data['material_code'])->firstOrFail();
 
+        if ($data['type'] === 'in') {
+
+             $data['project_id'] = null;
+
+            $data['worker_id'] = null;
+
+}
         $movement = $this->service->register([
             'type' => $data['type'],
             'material_id' => $material->id,

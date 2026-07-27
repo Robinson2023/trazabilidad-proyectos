@@ -45,44 +45,46 @@ public function index()
             'purchase_unit' => 'nullable|string',
             'purchase_quantity' => 'nullable|numeric',
             'purchase_cost' => 'nullable|numeric',
+            'warning_stock' => 'required|numeric|min:0',
+            'critical_stock' => 'required|numeric|min:0',
         ]);
 
- // cálculo automático del costo unitario
+        // cálculo automático del costo unitario
 
-$data['base_cost'] = null;
+        $data['base_cost'] = null;
 
-if (!empty($data['purchase_cost'])) {
+        if (!empty($data['purchase_cost'])) {
 
-    if (
-        !empty($data['purchase_quantity']) &&
-        $data['purchase_quantity'] > 0
-    ) {
+            if (
+                !empty($data['purchase_quantity']) &&
+                $data['purchase_quantity'] > 0
+            ) {
 
-        $data['base_cost'] =
-            $data['purchase_cost'] / $data['purchase_quantity'];
+                $data['base_cost'] =
+                    $data['purchase_cost'] / $data['purchase_quantity'];
 
-    } else {
+            } else {
 
-        $data['base_cost'] = $data['purchase_cost'];
-    }
-}
+                $data['base_cost'] = $data['purchase_cost'];
+            }
+        }
 
-$material = Material::create($data);
+        $material = Material::create($data);
 
-// Crear entrada automática de inventario
-if (
-    isset($data['initial_quantity']) &&
-    $data['initial_quantity'] > 0
-) {
-    Movement::create([
-        'type' => 'in',
-        'material_id' => $material->id,
-        'quantity' => $data['initial_quantity'],
-        'barcode_scanned' => $material->code,
-        'user_id' => auth()->id(),
-        'notes' => 'Stock inicial'
-    ]);
-}
+        // Crear entrada automática de inventario
+        if (
+            isset($data['initial_quantity']) &&
+            $data['initial_quantity'] > 0
+        ) {
+            Movement::create([
+                'type' => 'in',
+                'material_id' => $material->id,
+                'quantity' => $data['initial_quantity'],
+                'barcode_scanned' => $material->code,
+                'user_id' => auth()->id(),
+                'notes' => 'Stock inicial'
+            ]);
+        }
 
         return redirect()
             ->route('materials.index')
@@ -112,36 +114,36 @@ if (
             'purchase_cost' => 'nullable|numeric',
         ]);
 
- // recalcular costo unitario
+        // recalcular costo unitario
 
-$data['base_cost'] = $material->base_cost;
+        $data['base_cost'] = $material->base_cost;
 
-if (!empty($data['purchase_cost'])) {
+        if (!empty($data['purchase_cost'])) {
 
-    if (
-        !empty($data['purchase_quantity']) &&
-        $data['purchase_quantity'] > 0
-    ) {
+            if (
+                !empty($data['purchase_quantity']) &&
+                $data['purchase_quantity'] > 0
+            ) {
 
-        $data['base_cost'] =
-            $data['purchase_cost'] / $data['purchase_quantity'];
+                $data['base_cost'] =
+                    $data['purchase_cost'] / $data['purchase_quantity'];
 
-    } else {
+            } else {
 
-        // materiales unitarios
-        $data['base_cost'] = $data['purchase_cost'];
-    }
-}
+                // materiales unitarios
+                $data['base_cost'] = $data['purchase_cost'];
+            }
+        }
 
         $oldQuantity = $material->initial_quantity ?? 0;
 
-$material->update($data);
+            $material->update($data);
 
-$newQuantity = $data['initial_quantity'] ?? 0;
+            $newQuantity = $data['initial_quantity'] ?? 0;
 
-$difference = $newQuantity - $oldQuantity;
+            $difference = $newQuantity - $oldQuantity;
 
-if ($difference != 0) {
+            if ($difference != 0) {
 
     Movement::create([
         'type' => $difference > 0 ? 'in' : 'out',
@@ -149,7 +151,7 @@ if ($difference != 0) {
         'quantity' => abs($difference),
         'barcode_scanned' => $material->code,
         'user_id' => auth()->id(),
-        'notes' => 'Ajuste por edición'
+        'notes' => 'Ajuste por edición',
     ]);
 }
 
@@ -166,4 +168,32 @@ if ($difference != 0) {
             ->route('materials.index')
             ->with('success', 'Material eliminado');
     }
+
+    public function recalculateCosts()
+{
+    $updated = 0;
+
+    foreach (\App\Models\Material::all() as $material) {
+
+        if (
+            !empty($material->purchase_cost) &&
+            !empty($material->purchase_quantity) &&
+            $material->purchase_quantity > 0
+        ) {
+
+            $material->base_cost =
+                $material->purchase_cost /
+                $material->purchase_quantity;
+
+            $material->save();
+
+            $updated++;
+        }
+    }
+
+    return back()->with(
+        'success',
+        "Se recalcularon correctamente {$updated} materiales."
+    );
+}
 }

@@ -60,11 +60,38 @@
 </div>
 
     <div class="mb-4">
-        <label>Costo</label>
+        <label>Costo presentación</label>
         <input name="purchase_cost"
                value="{{ $material->purchase_cost }}"
                class="w-full border rounded p-2">
     </div>
+
+    <div>
+    <label class="font-semibold">
+        Stock Amarillo
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        name="warning_stock"
+        value="{{ old('warning_stock',25) }}"
+        class="w-full border rounded-lg p-3">
+</div>
+
+<div>
+    <label class="font-semibold">
+        Stock Crítico
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        name="critical_stock"
+        value="{{ old('critical_stock',10) }}"
+        class="w-full border rounded-lg p-3">
+</div>
+<br>
 
     <button class="bg-blue-500 text-white px-4 py-2 rounded">
         Actualizar

@@ -20,10 +20,13 @@
             </label>
 
             <input
+
                 type="number"
+                step="0.01"
                 name="workers[{{ $worker->id }}]"
+                value="{{ $project->workers->firstWhere('id', $worker->id)?->pivot->hours ?? '' }}"
                 placeholder="Horas"
-                class="border p-1">
+                class="border p-1 rounded w-24">
 
         </div>
 

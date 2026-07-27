@@ -47,17 +47,28 @@
                class="w-full border rounded p-2">
     </div>
 
-    <!-- CANTIDAD POR PRESENTACIÓN -->
- <div class="mb-4">
-    <label>Cantidad inicial</label>
+        <div class="mb-4">
+        <label>Cantidad por presentación</label>
 
-    <input
-        type="number"
-        step="0.01"
-        name="initial_quantity"
-        value="0"
-        class="w-full border rounded p-2">
-</div>
+        <input
+            type="number"
+            step="0.01"
+            name="purchase_quantity"
+            placeholder="Ej: 25"
+            class="w-full border rounded p-2">
+    </div>
+    
+    <!-- CANTIDAD POR PRESENTACIÓN -->
+    <div class="mb-4">
+        <label>Cantidad inicial</label>
+
+        <input
+            type="number"
+            step="0.01"
+            name="initial_quantity"
+            value="0"
+            class="w-full border rounded p-2">
+    </div>
 
     <!-- COSTO POR PRESENTACIÓN -->
     <div class="mb-4">
@@ -68,6 +79,32 @@
                placeholder="Ej: 48000"
                class="w-full border rounded p-2">
     </div>
+
+    <div>
+    <label class="font-semibold">
+        Stock Amarillo
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        name="warning_stock"
+        value="{{ old('warning_stock',25) }}"
+        class="w-full border rounded-lg p-3">
+</div>
+
+<div>
+    <label class="font-semibold">
+        Stock Crítico
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        name="critical_stock"
+        value="{{ old('critical_stock',10) }}"
+        class="w-full border rounded-lg p-3">
+</div>
 
     <button class="bg-blue-500 text-white px-4 py-2 rounded">
         Guardar

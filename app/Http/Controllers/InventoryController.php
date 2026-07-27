@@ -22,21 +22,31 @@ public function index()
 
     $materials = $query->get()->map(function ($material) {
 
-        $in = Movement::where('material_id', $material->id)
-            ->where('type', 'in')
+        $entries = Movement::where('material_id', $material->id)
+            ->whereIn('type', ['in', 'return'])
             ->sum('quantity');
 
-        $out = Movement::where('material_id', $material->id)
+        $exits = Movement::where('material_id', $material->id)
             ->where('type', 'out')
             ->sum('quantity');
 
-        $stock = $in - $out;
+        $stock = $entries - $exits;
 
         $material->stock = $stock;
 
-        $material->status =
-            $stock <= 0 ? 'critical' :
-            ($stock < 10 ? 'low' : 'ok');
+        if ($stock <= $material->critical_stock) {
+
+    $material->status = 'critical';
+
+        } elseif ($stock <= $material->warning_stock) {
+
+            $material->status = 'warning';
+
+        } else {
+
+            $material->status = 'ok';
+
+        }
 
         return $material;
     });

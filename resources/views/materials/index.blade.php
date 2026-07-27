@@ -28,13 +28,30 @@
 
 </form>
 
-<div class="flex justify-between mb-4">
-    <h1 class="text-2xl font-bold">Materiales</h1>
+<div class="flex gap-2">
+
+    <form action="{{ route('materials.recalculate') }}"
+          method="POST">
+
+        @csrf
+
+        <button
+            onclick="return confirm('¿Recalcular todos los costos unitarios?')"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+
+            🔄 Recalcular Costos
+
+        </button>
+
+    </form>
 
     <a href="{{ route('materials.create') }}"
-       class="bg-blue-500 text-white px-4 py-2 rounded">
+       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+
         Nuevo Material
+
     </a>
+
 </div>
 
 <table class="w-full bg-white shadow rounded">
@@ -58,8 +75,7 @@
 
             <td class="p-3">
                 {{ $material->purchase_quantity }}
-                {{ $material->purchase_unit }}
-                / ${{ $material->purchase_cost }}
+                {{ $material->purchase_unit }}/ ${{ $material->purchase_cost }}
             </td>
 
             <td class="p-3">

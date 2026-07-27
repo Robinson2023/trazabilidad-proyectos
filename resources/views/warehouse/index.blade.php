@@ -28,7 +28,7 @@
             type="text"
             name="material_code"
             class="w-full border p-2 rounded"
-            placeholder="Escanear o escribir MAT-00001">
+            placeholder="Escanear o escribir AL-001">
     </div>
 
     <div id="material-info"
@@ -64,18 +64,22 @@
             Tipo de movimiento
         </label>
 
-        <select name="type"
-                class="w-full border p-2 rounded">
+            <select name="type"
+                    class="w-full border p-2 rounded">
 
-            <option value="out">
-                Salida a proyecto
-            </option>
+                <option value="in">
+                    Entrada de inventario
+                </option>
 
-            <option value="return">
-                Devolución
-            </option>
+                <option value="out">
+                    Salida a proyecto
+                </option>
 
-        </select>
+                <option value="return">
+                    Devolución
+                </option>
+
+            </select>
     </div>
 
     <div>
@@ -177,6 +181,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return false;
     }
+
+    const movementType = document.getElementById('movement_type');
+
+    const projectSection = document.getElementById('project-section');
+
+    const workerSection = document.getElementById('worker-section');
+
+        function updateMovementForm() {
+
+      if (movementType.value === 'in') {
+
+        projectSection.style.display = 'none';
+        workerSection.style.display = 'none';
+
+       } else {
+
+        projectSection.style.display = 'block';
+        workerSection.style.display = 'block';
+
+        }
+
+}
+
+        movementType.addEventListener('change', updateMovementForm);
+
+        updateMovementForm();
 
 });
 

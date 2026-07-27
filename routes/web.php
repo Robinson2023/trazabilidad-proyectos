@@ -19,6 +19,7 @@ use App\Http\Controllers\GasEquipmentController;
 use App\Http\Controllers\GasCylinderController;
 use App\Http\Controllers\GasSettingController;
 use App\Services\NewsService;
+use App\Http\Controllers\InventoryEntryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -311,5 +312,25 @@ Route::post(
     [ProductStepController::class,'sync']
 )->name('products.steps.sync');
 
+Route::get('/inventory/entry', [InventoryEntryController::class, 'create'])
+    ->name('inventory.entry');
 
+Route::post('/inventory/entry', [InventoryEntryController::class, 'store'])
+    ->name('inventory.entry.store');
+
+Route::post(
+    '/materials/recalculate-costs',
+    [MaterialController::class, 'recalculateCosts']
+)->name('materials.recalculate');
+
+Route::get(
+    '/projects/{project}/workers',
+    [ProjectController::class, 'assignWorkers']
+)->name('projects.assignWorkers');
+
+Route::post(
+    '/projects/{project}/workers',
+    [ProjectController::class, 'storeWorkers']
+)->name('projects.storeWorkers');
+    
 require __DIR__.'/auth.php';

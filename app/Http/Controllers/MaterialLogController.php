@@ -9,12 +9,17 @@ class MaterialLogController extends Controller
 public function index()
 {
     $query = Movement::with([
-        'material',
-        'project',
-        'user',
-        'worker',
-    ])
-    ->where('type', 'out');
+    'material',
+    'project',
+    'user',
+    'worker',
+]);
+
+if (request('type')) {
+
+    $query->where('type', request('type'));
+
+}
 
     if (request('search')) {
 
