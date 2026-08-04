@@ -40,7 +40,7 @@
             </a>
 
             <a href="{{ route('gas-settings.index') }}"
-                class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3 rounded-xl shadow">
+                class="bg-gray-700 hover:bg-gray-800 text-black px-5 py-3 rounded-xl shadow">
 
                 ⚙ Configuración
 
@@ -83,6 +83,10 @@
                     <th class="p-4 text-center">Inicial</th>
 
                     <th class="p-4 text-center">Actual</th>
+
+                    <th class="px-4 py-3">Costo operativo gas</th>
+
+                    <th class="px-4 py-3">$ / Libra</th>
 
                     <th class="p-4 text-center">Estado</th>
 
@@ -134,33 +138,45 @@
 
                         </td>
 
+                        <td class="px-4 py-3">
+
+                            ${{ number_format($cylinder->cylinder_cost,0) }}
+
+                        </td>
+
+                        <td class="px-4 py-3">
+
+                            ${{ number_format($cylinder->cost_per_lb,2) }}
+
+                        </td>
+
                         <td class="p-4 text-center">
 
-@if($cylinder->status['color'] == 'green')
+                    @if($cylinder->status['color'] == 'green')
 
-    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
 
-        🟢 {{ $cylinder->status['text'] }}
+                            🟢 {{ $cylinder->status['text'] }}
 
-    </span>
+                        </span>
 
-@elseif($cylinder->status['color'] == 'yellow')
+                    @elseif($cylinder->status['color'] == 'yellow')
 
-    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
+                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
 
-        🟡 {{ $cylinder->status['text'] }}
+                            🟡 {{ $cylinder->status['text'] }}
 
-    </span>
+                        </span>
 
-@else
+                    @else
 
-    <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">
 
-        🔴 {{ $cylinder->status['text'] }}
+                            🔴 {{ $cylinder->status['text'] }}
 
-    </span>
+                        </span>
 
-@endif
+                    @endif
 
                         </td>
 
@@ -171,28 +187,44 @@
                                 <a href="{{ route('gas-cylinders.edit',$cylinder) }}"
                                     class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded">
 
-                                    ✏️
+                                    ✏️ Editar
+
+                                </a>
+
+                                <a
+                                    href="{{ route('gas-consumptions.create',$cylinder) }}"
+                                    class="bg-green-600 text-white px-3 py-1 rounded">
+
+                                    📋 Consumo
+
+                                </a>
+
+                                <a
+                                    href="{{ route('gas-consumptions.history',$cylinder) }}"
+                                    class="bg-red-700 text-black px-3 py-1 rounded">
+
+                                    📜 Historial
 
                                 </a>
 
                                 <form
-    action="{{ route('gas-cylinders.destroy', $cylinder) }}"
-    method="POST"
-    class="inline"
-    onsubmit="return confirm('¿Está seguro de eliminar este cilindro?');">
+                                    action="{{ route('gas-cylinders.destroy', $cylinder) }}"
+                                    method="POST"
+                                    class="inline"
+                                    onsubmit="return confirm('¿Está seguro de eliminar este cilindro?');">
 
-    @csrf
-    @method('DELETE')
+                        @csrf
+                        @method('DELETE')
 
-    <button
-        type="submit"
-        class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded">
+                            <button
+                                type="submit"
+                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded">
 
-        🗑
+                                🗑 Eliminar
 
-    </button>
+                            </button>
 
-</form>
+                            </form>
                             </div>
 
                         </td>

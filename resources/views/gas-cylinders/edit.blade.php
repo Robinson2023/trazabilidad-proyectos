@@ -216,6 +216,30 @@
 
         </div>
 
+        <div>
+            <label class="font-semibold">
+                Costo de la recarga
+            </label>
+
+            <input
+                type="number"
+                step="0.01"
+                name="cylinder_cost"
+                value="{{ old('cylinder_cost', $gasCylinder->cylinder_cost) }}"
+                class="w-full mt-2 border rounded-lg p-3">
+        </div>
+
+        <div>
+            <label class="font-semibold">
+                Costo por libra
+            </label>
+
+            <input
+                type="text"
+                value="${{ number_format($gasCylinder->cost_per_lb,2) }}"
+                class="w-full mt-2 border rounded-lg p-3 bg-gray-100"
+                readonly>
+    </div>
         <div class="mt-6">
 
             <label class="font-semibold">

@@ -52,31 +52,39 @@ public function store(Request $request)
     $data = $request->validate([
 
         'number' => 'required|unique:gas_cylinders,number',
-
         'gas_type' => 'required',
-
         'equipment_id' => 'required|exists:gas_equipments,id',
-
         'worker_id' => 'required|exists:workers,id',
-
         'start_date' => 'required|date',
 
         'initial_lbs' => 'required|numeric|min:0',
-
         'current_lbs' => 'required|numeric|min:0',
 
-        'notes' => 'nullable'
+        'cylinder_cost' => 'nullable|numeric|min:0',
 
+        'notes' => 'nullable'
     ]);
+
+    // Calcular costo por libra
+    $data['cost_per_lb'] = null;
+
+    if (
+        !empty($data['cylinder_cost']) &&
+        $data['initial_lbs'] > 0
+    ) {
+
+        $data['cost_per_lb'] =
+            $data['cylinder_cost'] / $data['initial_lbs'];
+    }
 
     GasCylinder::create($data);
 
     return redirect()
-            ->route('gas-cylinders.index')
-            ->with(
-                'success',
-                'Cilindro registrado correctamente.'
-            );
+        ->route('gas-cylinders.index')
+        ->with(
+            'success',
+            'Cilindro registrado correctamente.'
+        );
 }
     /**
      * Display the specified resource.
@@ -126,10 +134,23 @@ public function update(Request $request, GasCylinder $gasCylinder)
 
         'current_lbs' => 'required|numeric|min:0',
 
-        'notes' => 'nullable'
+        'notes' => 'nullable',
+
+        'cylinder_cost' => 'nullable|numeric|min:0',
 
     ]);
 
+    $data['cost_per_lb'] = null;
+
+        if (
+            !empty($data['cylinder_cost']) &&
+            $data['initial_lbs'] > 0
+        ) {
+
+            $data['cost_per_lb'] =
+                $data['cylinder_cost'] /
+                $data['initial_lbs'];
+        }
     $gasCylinder->update($data);
 
     return redirect()

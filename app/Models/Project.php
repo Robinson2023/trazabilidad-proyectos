@@ -58,4 +58,10 @@ public function productionItems()
 {
     return $this->hasMany(ProductionItem::class);
 }
+
+public function gasConsumptions()
+{
+    return $this->hasMany(GasCylinderConsumption::class);
+}
+
 }

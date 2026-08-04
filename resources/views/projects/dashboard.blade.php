@@ -104,6 +104,7 @@
 
             </div>
 
+
  <div class="flex-1 bg-white shadow rounded-xl p-6 text-center flex flex-col justify-center min-h-[150px]">
             <p class="text-gray-500 font-medium">
                 📉 Desviación
@@ -290,6 +291,20 @@
                 <span class="font-bold">
                     ${{ number_format($workerCost,0) }}
                 </span>
+
+            </div>
+
+            <div class="flex justify-between py-2 border-b">
+
+                <span>
+                    ⛽ Consumo de Gas
+                </span>
+
+                <strong>
+
+                    ${{ number_format($gasCost,0) }}
+
+                </strong>
 
             </div>
 

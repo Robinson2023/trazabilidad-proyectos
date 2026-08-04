@@ -23,7 +23,11 @@ class GasCylinder extends Model
 
     'worker_id',
 
-    'notes'
+    'notes',
+
+    'cylinder_cost',
+
+    'cost_per_lb',
 
 ];
 
@@ -70,6 +74,11 @@ public function getStatusAttribute()
         'color' => 'green',
         'text' => 'Disponible'
     ];
+}
+
+public function consumptions()
+{
+    return $this->hasMany(GasCylinderConsumption::class);
 }
 
 }

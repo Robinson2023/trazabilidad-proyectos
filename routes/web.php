@@ -20,6 +20,7 @@ use App\Http\Controllers\GasCylinderController;
 use App\Http\Controllers\GasSettingController;
 use App\Services\NewsService;
 use App\Http\Controllers\InventoryEntryController;
+use App\Http\Controllers\GasCylinderConsumptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -332,5 +333,20 @@ Route::post(
     '/projects/{project}/workers',
     [ProjectController::class, 'storeWorkers']
 )->name('projects.storeWorkers');
+
+Route::get(
+    '/gas-cylinders/{gasCylinder}/consumption',
+    [GasCylinderConsumptionController::class, 'create']
+)->name('gas-consumptions.create');
+
+Route::post(
+    '/gas-cylinders/{gasCylinder}/consumption',
+    [GasCylinderConsumptionController::class, 'store']
+)->name('gas-consumptions.store');
+
+Route::get(
+    '/gas-cylinders/{gasCylinder}/history',
+    [GasCylinderConsumptionController::class, 'history']
+)->name('gas-consumptions.history');
     
 require __DIR__.'/auth.php';

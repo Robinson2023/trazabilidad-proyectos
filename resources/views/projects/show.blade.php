@@ -75,8 +75,8 @@
     ])
 
 </div>
-<br>
 
+<br>
 
 <h2 class="text-2xl font-bold mb-2">
 
@@ -123,22 +123,14 @@
 
 'icon'=>'⚙',
 
-'title'=>'Configuración',
+'title'=>'Configurar proyecto',
 
 'description'=>'Editar proyecto',
 
 'color'=>'bg-yellow-500'
 
 ])
-
-
-<a href="{{ route('projects.assignWorkers', $project) }}"
-   class="bg-indigo-600 text-white px-4 py-2 rounded">
-
-    👷 Asignar Horas de Trabajo
-
-</a>
-
+<br>
 
 @include('components.module-card',[
 
@@ -148,7 +140,7 @@
 
 'title'=>'Agregar Técnicos',
 
-'description'=>'Agregar horas estimadas de los técnicos.',
+'description'=>'Agregar horas estimadas de los técnicos',
 
 'color'=>'bg-green-500'
 
@@ -168,5 +160,7 @@
 'color'=>'bg-red-500'
 
 ])
+
 </div>
+
 @endsection

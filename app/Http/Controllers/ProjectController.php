@@ -162,7 +162,8 @@ public function projectDashboard(Project $project)
     'movements.material',
     'workers',
     'laborEntries.worker',
-    'subcontractings'
+    'subcontractings',
+    'gasConsumptions',
 ]);
 
 $workerCost = $project->laborEntries->sum(function ($entry) {
@@ -171,6 +172,9 @@ $workerCost = $project->laborEntries->sum(function ($entry) {
 
 // 🤝 COSTO SUBCONTRATACIÓN
 $subcontractCost = $project->subcontractings->sum('amount');
+
+// ⛽ COSTO DE GAS
+$gasCost = $project->gasConsumptions->sum('total_cost');
 
     $movements = $project->movements->where('type', 'out');
 
@@ -227,7 +231,8 @@ $realCost =
     $totalCost +
     $workerCost +
     $totalIndirect +
-    $subcontractCost;
+    $subcontractCost +
+    $gasCost;
 
   // PRESUPUESTO
     $budget = $project->budget ?? 0;
@@ -269,7 +274,9 @@ return view('projects.dashboard', compact(
     'plannedHours',
     'realHours',
     'laborEntries',
-    'subcontractCost'
+    'subcontractCost',
+    'gasCost',
+    
 ));
 }
 public function show(Project $project)
@@ -365,7 +372,7 @@ public function globalDashboard()
         });
 
         // COSTO TOTAL REAL
-        $realCost = $materialCost + $workerCost;
+        $realCost = $materialCost + $workerCost + $gasCost;
 
         return [
     'name' => $project->name,
@@ -413,6 +420,9 @@ public function executiveDashboard()
             $variance = $realCost - $budget;
             $percentage = ($variance / $budget) * 100;
         }
+
+        $gasCost = $project->gasConsumptions()
+             ->sum('total_cost');
 
         return [
             'name' => $project->name,
