@@ -34,13 +34,33 @@
 
         <h2 class="text-xl font-bold mb-3">
 
-            💡 Frase del día
+            💡 Frases del día
 
         </h2>
 
         <p class="italic text-gray-700 text-lg">
 
-            "La calidad nunca es un accidente; siempre es el resultado del compromiso de todo un equipo."
+            "Conviértete en el cambio que deseas ver en el mundo."
+
+            "El liderazgo no se trata de títulos, se trata de inspirar."
+
+            "No esperes a que te necesiten, crea la necesidad."
+
+            "Tu potencial es infinito, atrévete a explorarlo."
+
+            "No tengas miedo de fallar, ten miedo de no intentarlo."
+
+            "El éxito no es un destino, es un viaje, disfrútalo."
+
+            "Rodéate de personas que te inspiren y te eleven."
+
+            "Cree en ti mismo, el mundo necesita tu luz."
+
+            "Deja un legado positivo, tu huella en el mundo."
+
+            "La mejor manera de predecir el futuro es crearlo."
+
+
 
         </p>
 
@@ -53,7 +73,7 @@
         <div class="bg-white rounded-xl shadow overflow-hidden">
 
             <img
-                src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200"
+                src="https://www.shutterstock.com/image-photo/focused-precise-welder-protective-workwear-600nw-2778592779.jpg"
                 class="w-full h-64 object-cover">
 
             <div class="p-4">
@@ -83,14 +103,7 @@
 
             </h3>
 
-        <iframe
-             class="w-full h-64 rounded"
-            src="https://www.youtube.com/embed/yFKBQrUOUt0"
-            title="Video"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen>
-        </iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/bEVQC6qd_bA?si=0VDuWXBKlMbGFjEK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
         </div>
 <br>

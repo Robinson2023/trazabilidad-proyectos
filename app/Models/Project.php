@@ -59,6 +59,29 @@ public function productionItems()
     return $this->hasMany(ProductionItem::class);
 }
 
+public function getProductionProgressAttribute()
+{
+    $items = $this->productionItems()
+        ->with('steps')
+        ->get();
+
+    $totalSteps = $items->sum(function ($item) {
+        return $item->steps->count();
+    });
+
+    if ($totalSteps === 0) {
+        return 0;
+    }
+
+    $completedSteps = $items->sum(function ($item) {
+        return $item->steps
+            ->where('status', 'completed')
+            ->count();
+    });
+
+    return round(($completedSteps / $totalSteps) * 100);
+}
+
 public function gasConsumptions()
 {
     return $this->hasMany(GasCylinderConsumption::class);

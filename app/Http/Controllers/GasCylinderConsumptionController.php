@@ -11,7 +11,16 @@ use App\Models\GasCylinderConsumption;
 class GasCylinderConsumptionController extends Controller
 {
     public function create(GasCylinder $gasCylinder)
+    
     {
+        if (!$gasCylinder->equipment_id) {
+        return redirect()
+            ->route('gas-cylinders.show', $gasCylinder)
+            ->with(
+                'error',
+                'Este cilindro está en almacén y no está asignado a ningún equipo. No se puede registrar consumo.'
+            );
+    }
         return view(
             'gas-consumptions.create',
             [

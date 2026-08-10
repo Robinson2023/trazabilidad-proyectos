@@ -52,20 +52,26 @@ public function store(Request $request)
     $data = $request->validate([
 
         'number' => 'required|unique:gas_cylinders,number',
+
         'gas_type' => 'required',
-        'equipment_id' => 'required|exists:gas_equipments,id',
-        'worker_id' => 'required|exists:workers,id',
+
+        'equipment_id' => 'nullable|exists:gas_equipments,id',
+
+        'worker_id' => 'nullable|exists:workers,id',
+
         'start_date' => 'required|date',
 
         'initial_lbs' => 'required|numeric|min:0',
-        'current_lbs' => 'required|numeric|min:0',
 
         'cylinder_cost' => 'nullable|numeric|min:0',
 
-        'notes' => 'nullable'
+        'notes' => 'nullable',
+
     ]);
 
-    // Calcular costo por libra
+
+    // 💰 CALCULAR COSTO POR LIBRA
+
     $data['cost_per_lb'] = null;
 
     if (
@@ -77,7 +83,23 @@ public function store(Request $request)
             $data['cylinder_cost'] / $data['initial_lbs'];
     }
 
+
+    // 🔄 SITUACIÓN DEL CILINDRO
+
+    if (!empty($data['equipment_id'])) {
+
+        $data['lifecycle_status'] = 'in_use';
+
+    } else {
+
+        $data['lifecycle_status'] = 'available';
+
+    }
+
+    $data['current_lbs'] = $data['initial_lbs'];
+
     GasCylinder::create($data);
+
 
     return redirect()
         ->route('gas-cylinders.index')
@@ -89,10 +111,21 @@ public function store(Request $request)
     /**
      * Display the specified resource.
      */
-    public function show(GasCylinder $gasCylinder)
-    {
-        //
-    }
+        public function show(GasCylinder $gasCylinder)
+        {
+            $gasCylinder->load([
+                'equipment',
+                'worker',
+                'consumptions.project',
+                'consumptions.equipment',
+                'consumptions.worker',
+            ]);
+
+            return view(
+                'gas-cylinders.show',
+                compact('gasCylinder')
+            );
+        }
 
     /**
      * Show the form for editing the specified resource.
@@ -124,9 +157,9 @@ public function update(Request $request, GasCylinder $gasCylinder)
 
         'gas_type' => 'required',
 
-        'equipment_id' => 'required|exists:gas_equipments,id',
+        'equipment_id' => 'nullable|exists:gas_equipments,id',
 
-        'worker_id' => 'required|exists:workers,id',
+        'worker_id' => 'nullable|exists:workers,id',
 
         'start_date' => 'required|date',
 
@@ -140,7 +173,7 @@ public function update(Request $request, GasCylinder $gasCylinder)
 
     ]);
 
-    $data['cost_per_lb'] = null;
+        $data['cost_per_lb'] = null;
 
         if (
             !empty($data['cylinder_cost']) &&
@@ -151,16 +184,55 @@ public function update(Request $request, GasCylinder $gasCylinder)
                 $data['cylinder_cost'] /
                 $data['initial_lbs'];
         }
-    $gasCylinder->update($data);
+
+
+        // 🔄 SITUACIÓN
+
+        if (!empty($data['equipment_id'])) {
+
+            $data['lifecycle_status'] = 'in_use';
+
+        } else {
+
+            $data['lifecycle_status'] = 'available';
+
+        }
+
+
+        $gasCylinder->update($data);
+
+}
+
+public function markPendingReturn(GasCylinder $gasCylinder)
+{
+    $gasCylinder->update([
+        'lifecycle_status' => 'pending_return',
+        'return_requested_at' => now(),
+    ]);
 
     return redirect()
         ->route('gas-cylinders.index')
         ->with(
             'success',
-            'Cilindro actualizado correctamente.'
+            'Cilindro marcado como pendiente de entrega.'
         );
 }
 
+
+public function markDelivered(GasCylinder $gasCylinder)
+{
+    $gasCylinder->update([
+        'lifecycle_status' => 'delivered',
+        'delivered_at' => now(),
+    ]);
+
+    return redirect()
+        ->route('gas-cylinders.index')
+        ->with(
+            'success',
+            'Cilindro marcado como entregado.'
+        );
+}
     /**
      * Remove the specified resource from storage.
      */

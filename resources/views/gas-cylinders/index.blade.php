@@ -2,69 +2,267 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto">
+{{-- ===================================================== --}}
+{{-- CABECERA --}}
+{{-- ===================================================== --}}
 
-    {{-- Encabezado --}}
-    <div class="flex justify-between items-center mb-8">
+<div class="flex justify-between items-center mb-8">
+
+    <div>
+
+        <h1 class="text-3xl font-bold text-gray-800">
+            🧯 Control de Cilindros
+        </h1>
+
+        <p class="text-gray-500 mt-1">
+            Estado y ubicación de los cilindros de gases industriales.
+        </p>
+
+    </div>
+
+    <div class="flex gap-3">
+
+        <a
+            href="{{ route('gas-cylinders.create') }}"
+            class="bg-blue-600 hover:bg-blue-700
+                   text-white px-5 py-3 rounded-xl shadow">
+
+            ➕ Nuevo Cilindro
+
+        </a>
+
+        <a
+            href="{{ route('gas-equipments.index') }}"
+            class="bg-green-600 hover:bg-green-700
+                   text-white px-5 py-3 rounded-xl shadow">
+
+            ⚙ Equipos
+
+        </a>
+
+        <a
+            href="{{ route('gas-settings.index') }}"
+            class="bg-gray-700 hover:bg-gray-800
+                   text-black px-5 py-3 rounded-xl shadow">
+
+            ⚙ Configuración
+
+        </a>
+
+    </div>
+
+</div>
+
+
+{{-- ===================================================== --}}
+{{-- MENSAJE --}}
+{{-- ===================================================== --}}
+
+@if(session('success'))
+
+    <div class="bg-green-100 border border-green-300
+                text-green-700 rounded-xl p-4 mb-6">
+
+        {{ session('success') }}
+
+    </div>
+
+@endif
+
+{{-- ===================================================== --}}
+{{-- CLASIFICACIÓN --}}
+{{-- ===================================================== --}}
+
+@php
+
+    $available = $cylinders->where(
+        'lifecycle_status',
+        'available'
+    );
+
+    $inUse = $cylinders->where(
+        'lifecycle_status',
+        'in_use'
+    );
+
+    $pendingReturn = $cylinders->where(
+        'lifecycle_status',
+        'pending_return'
+    );
+
+    $delivered = $cylinders->where(
+        'lifecycle_status',
+        'delivered'
+    );
+
+    $currentCylinders = $available->merge($inUse);
+
+@endphp
+
+<br>
+
+{{-- ===================================================== --}}
+{{-- RESUMEN --}}
+{{-- ===================================================== --}}
+
+<div class="flex flex-wrap gap-3 mb-8">
+
+
+    {{-- ALMACÉN --}}
+
+    <div class="bg-white rounded-xl shadow-md
+            border border-green-100
+            px-4 py-3 w-44">
+
+    <div class="flex items-center justify-between">
 
         <div>
 
-            <h1 class="text-3xl font-bold text-gray-800">
+            <p class="text-xs text-gray-500">
+                En almacén
+            </p>
 
-                🟢 Control de Cilindros
-
-            </h1>
-
-            <p class="text-gray-500 mt-1">
-
-                Administración de gases industriales.
-
+            <p class="text-2xl font-bold text-green-600">
+                {{ $available->count() }}
             </p>
 
         </div>
 
-        <div class="flex gap-3">
+        <span class="text-2xl">
+            🟢
+        </span>
 
-            <a href="{{ route('gas-cylinders.create') }}"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow">
+    </div>
 
-                ➕ Nuevo Cilindro
+</div>
 
-            </a>
 
-            <a href="{{ route('gas-equipments.index') }}"
-                class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl shadow">
+    {{-- EN USO --}}
 
-                ⚙ Equipos
+    <div class="bg-white rounded-xl shadow-md
+            border border-blue-100
+            px-4 py-3 w-44">
 
-            </a>
+    <div class="flex items-center justify-between">
 
-            <a href="{{ route('gas-settings.index') }}"
-                class="bg-gray-700 hover:bg-gray-800 text-black px-5 py-3 rounded-xl shadow">
+        <div>
 
-                ⚙ Configuración
+            <p class="text-xs text-gray-500">
+                En uso
+            </p>
 
-            </a>
+            <p class="text-2xl font-bold text-blue-600">
+                {{ $inUse->count() }}
+            </p>
+
+        </div>
+
+        <span class="text-2xl">
+            🔵
+        </span>
+
+    </div>
+
+</div>
+
+
+    {{-- PENDIENTES --}}
+
+    <div class="bg-white rounded-xl shadow-md
+            border border-yellow-100
+            px-4 py-3 w-44">
+
+    <div class="flex items-center justify-between">
+
+        <div>
+
+            <p class="text-xs text-gray-500">
+                Por entregar
+            </p>
+
+            <p class="text-2xl font-bold text-yellow-600">
+                {{ $pendingReturn->count() }}
+            </p>
+
+        </div>
+
+        <span class="text-2xl">
+            🟠
+        </span>
+
+    </div>
+
+</div>
+
+    {{-- ENTREGADOS --}}
+
+    <div class="bg-white rounded-xl shadow-md
+            border border-gray-200
+            px-4 py-3 w-44">
+
+    <div class="flex items-center justify-between">
+
+        <div>
+
+            <p class="text-xs text-gray-500">
+                Entregados
+            </p>
+
+            <p class="text-2xl font-bold text-gray-600">
+                {{ $delivered->count() }}
+            </p>
+
+        </div>
+
+        <span class="text-2xl">
+            ⚫
+        </span>
+
+    </div>
+
+</div>
+
+</div>
+
+<br><br>
+
+{{-- ===================================================== --}}
+{{-- CILINDROS EN TALLER --}}
+{{-- ===================================================== --}}
+
+<div class="bg-white rounded-2xl shadow-lg
+            overflow-hidden mb-10">
+
+    <div class="px-5 py-4 border-b bg-gray-50">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <h2 class="text-xl font-bold text-gray-800">
+                    🏭 Cilindros en taller
+                </h2>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Cilindros disponibles y actualmente en uso.
+                </p>
+
+            </div>
+
+            <span class="bg-blue-100 text-blue-700
+                         px-3 py-1 rounded-full
+                         text-sm font-semibold">
+
+                {{ $currentCylinders->count() }}
+
+            </span>
 
         </div>
 
     </div>
 
 
-    {{-- Mensaje --}}
-    @if(session('success'))
-
-        <div class="bg-green-100 border border-green-300 text-green-700 rounded-xl p-4 mb-6">
-
-            {{ session('success') }}
-
-        </div>
-
-    @endif
-
-
-    {{-- Tabla --}}
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div class="overflow-x-auto">
 
         <table class="w-full">
 
@@ -72,160 +270,489 @@
 
                 <tr>
 
-                    <th class="p-4 text-left">Número</th>
+                    <th class="px-5 py-3 text-left text-sm">
+                        Cilindro
+                    </th>
 
-                    <th class="p-4 text-left">Gas</th>
+                    <th class="px-5 py-3 text-left text-sm">
+                        Gas
+                    </th>
 
-                    <th class="p-4 text-left">Equipo</th>
+                    <th class="px-5 py-3 text-left text-sm">
+                        Ubicación / uso
+                    </th>
 
-                    <th class="p-4 text-left">Responsable</th>
+                    <th class="px-5 py-3 text-left text-sm">
+                        Responsable
+                    </th>
 
-                    <th class="p-4 text-center">Inicial</th>
+                    <th class="px-5 py-3 text-center text-sm">
+                        Libras
+                    </th>
 
-                    <th class="p-4 text-center">Actual</th>
+                    <th class="px-5 py-3 text-center text-sm">
+                        Estado
+                    </th>
 
-                    <th class="px-4 py-3">Costo operativo gas</th>
-
-                    <th class="px-4 py-3">$ / Libra</th>
-
-                    <th class="p-4 text-center">Estado</th>
-
-                    <th class="p-4 text-center">Acciones</th>
+                    <th class="px-5 py-3 text-center text-sm">
+                        Acción
+                    </th>
 
                 </tr>
 
             </thead>
 
+
             <tbody>
 
-                @forelse($cylinders as $cylinder)
+                @forelse($currentCylinders as $cylinder)
 
                     <tr class="border-b hover:bg-gray-50">
 
-                        <td class="p-4 font-semibold">
 
-                            {{ $cylinder->number }}
+                        {{-- CILINDRO --}}
+
+                        <td class="px-5 py-4">
+
+                            <span class="font-semibold text-gray-800">
+
+                                {{ $cylinder->number }}
+
+                            </span>
 
                         </td>
 
-                        <td class="p-4">
+
+                        {{-- GAS --}}
+
+                        <td class="px-5 py-4">
 
                             {{ $cylinder->gas_type }}
 
                         </td>
 
-                        <td class="p-4">
 
-                            {{ $cylinder->equipment->name }}
+                        {{-- UBICACIÓN / USO --}}
 
-                        </td>
+                        <td class="px-5 py-4">
 
-                        <td class="p-4">
+                            @if($cylinder->lifecycle_status === 'available')
 
-                            {{ $cylinder->worker->name }}
+                                <span class="text-green-700 font-medium">
 
-                        </td>
+                                    🏭 Almacén
 
-                        <td class="p-4 text-center">
+                                </span>
 
-                            {{ $cylinder->initial_lbs }}
+                            @else
 
-                        </td>
+                                <span class="text-blue-700 font-medium">
 
-                        <td class="p-4 text-center font-bold">
+                                    🔧 {{ $cylinder->equipment?->name ?? 'En uso' }}
 
-                            {{ $cylinder->current_lbs }}
+                                </span>
 
-                        </td>
-
-                        <td class="px-4 py-3">
-
-                            ${{ number_format($cylinder->cylinder_cost,0) }}
+                            @endif
 
                         </td>
 
-                        <td class="px-4 py-3">
 
-                            ${{ number_format($cylinder->cost_per_lb,2) }}
+                        {{-- RESPONSABLE --}}
 
-                        </td>
+                        <td class="px-5 py-4">
 
-                        <td class="p-4 text-center">
-
-                    @if($cylinder->status['color'] == 'green')
-
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
-
-                            🟢 {{ $cylinder->status['text'] }}
-
-                        </span>
-
-                    @elseif($cylinder->status['color'] == 'yellow')
-
-                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
-
-                            🟡 {{ $cylinder->status['text'] }}
-
-                        </span>
-
-                    @else
-
-                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">
-
-                            🔴 {{ $cylinder->status['text'] }}
-
-                        </span>
-
-                    @endif
+                            {{ $cylinder->worker?->name ?? '—' }}
 
                         </td>
 
-                        <td class="p-4">
 
-                            <div class="flex justify-center gap-2">
+                        {{-- LIBRAS --}}
 
-                                <a href="{{ route('gas-cylinders.edit',$cylinder) }}"
-                                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded">
+                        <td class="px-5 py-4 text-center">
 
-                                    ✏️ Editar
+                            <span class="font-bold">
 
-                                </a>
+                                {{ number_format($cylinder->current_lbs, 0) }}
 
-                                <a
-                                    href="{{ route('gas-consumptions.create',$cylinder) }}"
-                                    class="bg-green-600 text-white px-3 py-1 rounded">
+                            </span>
 
-                                    📋 Consumo
+                            <span class="text-xs text-gray-400">
+                                lb
+                            </span>
 
-                                </a>
+                        </td>
 
-                                <a
-                                    href="{{ route('gas-consumptions.history',$cylinder) }}"
-                                    class="bg-red-700 text-black px-3 py-1 rounded">
 
-                                    📜 Historial
+                        {{-- ESTADO DEL GAS --}}
 
-                                </a>
+                        <td class="px-5 py-4 text-center">
 
-                                <form
-                                    action="{{ route('gas-cylinders.destroy', $cylinder) }}"
-                                    method="POST"
-                                    class="inline"
-                                    onsubmit="return confirm('¿Está seguro de eliminar este cilindro?');">
+                            @if($cylinder->status['color'] == 'green')
 
-                        @csrf
-                        @method('DELETE')
+                                <span class="inline-flex
+                                             bg-green-100
+                                             text-green-700
+                                             px-3 py-1
+                                             rounded-full
+                                             text-xs font-semibold">
 
-                            <button
-                                type="submit"
-                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded">
+                                    🟢 Disponible
 
-                                🗑 Eliminar
+                                </span>
 
-                            </button>
+                            @elseif($cylinder->status['color'] == 'yellow')
+
+                                <span class="inline-flex
+                                             bg-yellow-100
+                                             text-yellow-800
+                                             px-3 py-1
+                                             rounded-full
+                                             text-xs font-semibold">
+
+                                    🟡 Solicitar
+
+                                </span>
+
+                            @else
+
+                                <span class="inline-flex
+                                             bg-red-100
+                                             text-red-700
+                                             px-3 py-1
+                                             rounded-full
+                                             text-xs font-semibold">
+
+                                    🔴 Cambiar
+
+                                </span>
+
+                            @endif
+
+                        </td>
+
+                        {{-- ACCIÓN --}}
+
+                            <td class="px-5 py-4 text-center">
+
+                                <div class="flex justify-center items-center gap-2">
+
+                                    {{-- VER --}}
+
+                                    <a
+                                        href="{{ route('gas-cylinders.show', $cylinder) }}"
+                                        class="inline-flex items-center justify-center gap-1
+                                            bg-blue-600 hover:bg-blue-700
+                                            text-white
+                                            px-4 py-2
+                                            rounded-lg
+                                            text-sm font-semibold
+                                            whitespace-nowrap
+                                            shadow-sm">
+
+                                        👁 Ver
+
+                                    </a>
+
+
+                                    {{-- POR ENTREGAR --}}
+
+                                    @if($cylinder->lifecycle_status === 'in_use')
+
+                                        <form
+                                            action="{{ route('gas-cylinders.pending-return', $cylinder) }}"
+                                            method="POST"
+                                            class="inline"
+                                            onsubmit="return confirm('¿Marcar este cilindro como pendiente de entrega?');">
+
+                                            @csrf
+
+                                            <button
+                                                type="submit"
+                                                class="inline-flex items-center justify-center
+                                                    bg-orange-500 hover:bg-orange-600
+                                                    text-black
+                                                    px-4 py-2
+                                                    rounded-lg
+                                                    text-sm font-semibold
+                                                    whitespace-nowrap
+                                                    shadow-sm">
+
+                                                📦 Por entregar
+
+                                            </button>
+
+                                        </form>
+
+                                    @endif
+
+                                </div>
+
+                            </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="text-center text-gray-500 py-10">
+
+                            No hay cilindros disponibles o en uso.
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<br><br>
+{{-- ===================================================== --}}
+{{-- PENDIENTES DE ENTREGA --}}
+{{-- ===================================================== --}}
+
+<div class="bg-white rounded-2xl shadow-lg
+            overflow-hidden mb-10">
+
+    <div class="px-5 py-4 border-b bg-yellow-50">
+
+        <h2 class="text-xl font-bold text-gray-800">
+            🟠 Cilindros pendientes de entrega
+        </h2>
+
+        <p class="text-sm text-gray-500 mt-1">
+            Cilindros retirados del servicio pendientes de devolución.
+        </p>
+
+    </div>
+
+
+    <div class="overflow-x-auto">
+
+        <table class="w-full">
+
+            <thead class="bg-gray-100">
+
+                <tr>
+
+                    <th class="px-5 py-3 text-left">
+                        Cilindro
+                    </th>
+
+                    <th class="px-5 py-3 text-left">
+                        Gas
+                    </th>
+
+                    <th class="px-5 py-3 text-left">
+                        Equipo anterior
+                    </th>
+
+                    <th class="px-5 py-3 text-center">
+                        Libras
+                    </th>
+
+                    <th class="px-5 py-3 text-center text-sm w-28">
+                        Acción
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @forelse($pendingReturn as $cylinder)
+
+                    <tr class="border-b hover:bg-yellow-50">
+
+                        <td class="px-5 py-4 font-semibold">
+                            {{ $cylinder->number }}
+                        </td>
+
+                        <td class="px-5 py-4">
+                            {{ $cylinder->gas_type }}
+                        </td>
+
+                        <td class="px-5 py-4">
+                            {{ $cylinder->equipment?->name ?? '—' }}
+                        </td>
+
+                        <td class="px-5 py-4 text-center font-bold">
+                            {{ number_format($cylinder->current_lbs, 0) }} lb
+                        </td>
+
+                        {{-- ACCIÓN --}}
+
+                    <td class="px-5 py-4 text-center">
+
+                        <div class="flex justify-center items-center gap-2">
+
+                            {{-- VER --}}
+
+                            <a
+                                href="{{ route('gas-cylinders.show', $cylinder) }}"
+                                class="inline-flex items-center justify-center
+                                    bg-blue-600 hover:bg-blue-700
+                                    text-black
+                                    px-4 py-2
+                                    rounded-lg
+                                    text-sm font-semibold
+                                    whitespace-nowrap
+                                    shadow-sm">
+
+                                👁 Ver
+
+                            </a>
+
+
+                            {{-- MARCAR COMO ENTREGADO --}}
+
+                            <form
+                                action="{{ route('gas-cylinders.delivered', $cylinder) }}"
+                                method="POST"
+                                class="inline"
+                                onsubmit="return confirm(
+                                    '¿Confirmar que este cilindro ya fue entregado a la empresa?'
+                                );">
+
+                                @csrf
+
+                                <button
+                                    type="submit"
+                                    class="inline-flex items-center justify-center
+                                        bg-gray-700 hover:bg-gray-800
+                                        text-black
+                                        px-4 py-2
+                                        rounded-lg
+                                        text-sm font-semibold
+                                        whitespace-nowrap
+                                        shadow-sm">
+
+                                    ✓ Entregado
+
+                                </button>
 
                             </form>
-                            </div>
+
+                        </div>
+
+                    </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="text-center text-gray-400 py-8">
+
+                            No hay cilindros pendientes de entrega.
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<br><br>
+
+{{-- ===================================================== --}}
+{{-- ENTREGADOS --}}
+{{-- ===================================================== --}}
+
+<div class="bg-white rounded-2xl shadow-lg
+            overflow-hidden mb-10">
+
+    <div class="px-5 py-4 border-b bg-gray-100">
+
+        <h2 class="text-xl font-bold text-gray-800">
+            ⚫ Cilindros entregados
+        </h2>
+
+        <p class="text-sm text-gray-500 mt-1">
+            Historial de cilindros que ya salieron del taller.
+        </p>
+
+    </div>
+
+
+    <div class="overflow-x-auto">
+
+        <table class="w-full">
+
+            <thead class="bg-gray-100">
+
+                <tr>
+
+                    <th class="px-5 py-3 text-left">
+                        Cilindro
+                    </th>
+
+                    <th class="px-5 py-3 text-left">
+                        Gas
+                    </th>
+
+                    <th class="px-5 py-3 text-center">
+                        Libras finales
+                    </th>
+
+                    <th class="px-5 py-3 text-center">
+                        Acción
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @forelse($delivered as $cylinder)
+
+                    <tr class="border-b hover:bg-gray-50">
+
+                        <td class="px-5 py-4 font-semibold">
+                            {{ $cylinder->number }}
+                        </td>
+
+                        <td class="px-5 py-4">
+                            {{ $cylinder->gas_type }}
+                        </td>
+
+                        <td class="px-5 py-4 text-center">
+                            {{ number_format($cylinder->current_lbs, 0) }} lb
+                        </td>
+
+                        <td class="px-5 py-4 text-center">
+
+                            <a
+                                href="{{ route('gas-cylinders.show', $cylinder) }}"
+                                class="bg-gray-700 hover:bg-gray-800
+                                       text-white px-4 py-2
+                                       rounded-lg text-sm font-semibold">
+
+                                👁 Historial
+
+                            </a>
 
                         </td>
 
@@ -235,10 +762,11 @@
 
                     <tr>
 
-                        <td colspan="8"
-                            class="text-center text-gray-500 py-10">
+                        <td
+                            colspan="4"
+                            class="text-center text-gray-400 py-8">
 
-                            No existen cilindros registrados.
+                            Todavía no existen cilindros entregados.
 
                         </td>
 

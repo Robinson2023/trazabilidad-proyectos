@@ -2,79 +2,78 @@
 
 @section('content')
 
-{{-- CABECERA --}}
-<div class="justify-between items-center border-b pb-5 mb-8">
+<div class="mb-6">
 
-    <div>
+    <div class="flex items-center justify-between">
 
-        <h1 class="text-3xl font-bold text-gray-800">
-            📦 Biblioteca de Productos
-        </h1>
-<br>
-        <p class="text-gray-500 mt-1">
-            Catálogo de productos de fabricación
-        </p>
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">
+                📦 Biblioteca de Productos
+            </h1>
+
+            <p class="text-gray-500 mt-1">
+                Catálogo de productos de fabricación
+            </p>
+        </div>
+
+        <a
+            href="{{ route('products.create') }}"
+            class="bg-blue-600 hover:bg-blue-700
+                   text-white px-5 py-3 rounded-lg
+                   font-semibold shadow">
+
+            ➕ Nuevo Producto
+
+        </a>
 
     </div>
-<br>
-    <a href="{{ route('products.create') }}"
-       class="bg-blue-500 hover:bg-blue-700 text-black px-2 py-2 rounded-xl shadow">
-
-        ➕ Nuevo Producto
-
-    </a>
 
 </div>
 
-<br>
-<br>
 
 @if(session('success'))
 
-<div class="mb-6 rounded-xl bg-green-50 border border-green-200 text-green-500 p-2">
+    <div class="bg-green-100 border border-green-300
+                text-green-800 px-4 py-3 rounded-lg mb-6">
 
-    {{ session('success') }}
+        {{ session('success') }}
 
-</div>
+    </div>
 
 @endif
 
 
 @if($products->isEmpty())
 
-<div class="bg-white rounded-xl shadow-lg p-10 text-center">
+    <div class="bg-white rounded-xl shadow p-10 text-center">
 
-    <div class="text-6xl mb-4">
+        <div class="text-6xl mb-4">
+            📦
+        </div>
 
-        📦
+        <h2 class="text-2xl font-bold text-gray-800">
+            No existen productos registrados
+        </h2>
+
+        <p class="text-gray-500 mt-3">
+            Cree el primer producto para comenzar.
+        </p>
 
     </div>
 
-    <h2 class="text-2xl font-bold">
-
-        No existen productos registrados
-
-    </h2>
-
-    <p class="text-gray-500 mt-3">
-
-        Cree el primer producto para comenzar.
-
-    </p>
-
-</div>
-
 @else
 
-<div class="flex flex-wrap justify-center gap-2">
+    {{-- LISTADO HORIZONTAL DE PRODUCTOS --}}
 
-    @foreach($products as $product)
+    <div class="space-y-4">
 
-        <x-product-card :product="$product"/>
+        @foreach($products as $product)
 
-    @endforeach
+            <x-product-card :product="$product"/>
 
-</div>
+        @endforeach
+
+    </div>
 
 @endif
 

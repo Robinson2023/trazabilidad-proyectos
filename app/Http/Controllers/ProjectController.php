@@ -62,16 +62,36 @@ public function index()
 
         $search = request('search');
 
-        $query->where('name', 'like', "%{$search}%")
+        $query->where(function ($q) use ($search) {
+
+            $q->where('name', 'like', "%{$search}%")
               ->orWhere('client', 'like', "%{$search}%")
               ->orWhere('status', 'like', "%{$search}%");
+
+        });
     }
 
-    $projects = $query->get();
+    $projects = $query
+        ->orderByRaw("
+            CASE
+                WHEN status = 'finished' THEN 2
+                ELSE 1
+            END
+        ")
+        ->orderBy('id', 'desc')
+        ->get();
+
+    $activeProjects = $projects->where('status', '!=', 'finished');
+
+    $finishedProjects = $projects->where('status', 'finished');
 
     return view(
         'projects.index',
-        compact('projects')
+        compact(
+            'projects',
+            'activeProjects',
+            'finishedProjects'
+        )
     );
 }
 
@@ -546,6 +566,29 @@ return redirect()
         'success',
         'Producción agregada correctamente.'
     );
+}
+
+public function finish(Project $project)
+{
+    // Verificar que realmente haya terminado toda la producción
+    if ($project->production_progress < 100) {
+
+        return back()->with(
+            'error',
+            'El proyecto todavía no ha terminado toda su producción.'
+        );
+    }
+
+    $project->update([
+        'status' => 'finished'
+    ]);
+
+    return redirect()
+        ->route('projects.dashboard', $project)
+        ->with(
+            'success',
+            'Proyecto marcado como terminado y entregado correctamente.'
+        );
 }
 
 }

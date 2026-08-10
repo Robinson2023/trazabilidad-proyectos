@@ -349,4 +349,19 @@ Route::get(
     [GasCylinderConsumptionController::class, 'history']
 )->name('gas-consumptions.history');
     
+Route::patch(
+    '/projects/{project}/finish',
+    [ProjectController::class, 'finish']
+)->name('projects.finish');
+
+Route::post(
+    'gas-cylinders/{gasCylinder}/pending-return',
+    [GasCylinderController::class, 'markPendingReturn']
+)->name('gas-cylinders.pending-return');
+
+Route::post(
+    'gas-cylinders/{gasCylinder}/delivered',
+    [GasCylinderController::class, 'markDelivered']
+)->name('gas-cylinders.delivered');
+
 require __DIR__.'/auth.php';

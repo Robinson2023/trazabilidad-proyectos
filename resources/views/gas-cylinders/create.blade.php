@@ -106,20 +106,22 @@
             <div>
 
                 <label class="font-semibold">
-
                     Equipo
-
                 </label>
 
                 <select
                     name="equipment_id"
                     class="w-full mt-2 border rounded-lg p-3">
 
-                    <option value="">Seleccione...</option>
+                    <option value="">
+                        🏭 Sin asignar — Almacén
+                    </option>
 
                     @foreach($equipments as $equipment)
 
-                        <option value="{{ $equipment->id }}">
+                        <option
+                            value="{{ $equipment->id }}"
+                            {{ old('equipment_id') == $equipment->id ? 'selected' : '' }}>
 
                             {{ $equipment->code }} - {{ $equipment->name }}
 
@@ -129,25 +131,31 @@
 
                 </select>
 
+                <p class="text-xs text-gray-500 mt-1">
+                    Déjelo sin asignar si el cilindro queda almacenado.
+                </p>
+
             </div>
 
             <div>
 
                 <label class="font-semibold">
-
                     Responsable
-
                 </label>
 
                 <select
                     name="worker_id"
                     class="w-full mt-2 border rounded-lg p-3">
 
-                    <option value="">Seleccione...</option>
+                    <option value="">
+                        👤 Sin asignar
+                    </option>
 
                     @foreach($workers as $worker)
 
-                        <option value="{{ $worker->id }}">
+                        <option
+                            value="{{ $worker->id }}"
+                            {{ old('worker_id') == $worker->id ? 'selected' : '' }}>
 
                             {{ $worker->name }}
 
@@ -156,6 +164,10 @@
                     @endforeach
 
                 </select>
+
+                <p class="text-xs text-gray-500 mt-1">
+                    Solo se asigna cuando el cilindro entra en operación.
+                </p>
 
             </div>
 
@@ -188,23 +200,6 @@
                     step="0.01"
                     name="initial_lbs"
                     value="{{ old('initial_lbs') }}"
-                    class="w-full mt-2 border rounded-lg p-3">
-
-            </div>
-
-            <div>
-
-                <label class="font-semibold">
-
-                    Libras Actuales
-
-                </label>
-
-                <input
-                    type="number"
-                    step="0.01"
-                    name="current_lbs"
-                    value="{{ old('current_lbs') }}"
                     class="w-full mt-2 border rounded-lg p-3">
 
             </div>

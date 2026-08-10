@@ -76,7 +76,7 @@ Registrar consumo
 
 <input
     class="w-full border rounded p-2 bg-gray-100"
-    value="{{ $gasCylinder->equipment->name }}"
+    value="{{ $gasCylinder->equipment?->name ?? '🏭 Almacén — Sin equipo asignado' }}"
     readonly>
 
 </div>

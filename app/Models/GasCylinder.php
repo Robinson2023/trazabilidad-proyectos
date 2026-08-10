@@ -28,6 +28,8 @@ class GasCylinder extends Model
     'cylinder_cost',
 
     'cost_per_lb',
+    
+    'lifecycle_status',
 
 ];
 
