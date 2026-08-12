@@ -38,48 +38,58 @@
     </div>
 
 <br>
-    {{-- ===================================================== --}}
-    {{-- AVANCE GENERAL DEL PROYECTO --}}
-    {{-- ===================================================== --}}
+{{-- ===================================================== --}}
+{{-- AVANCE GENERAL DEL PROYECTO --}}
+{{-- ===================================================== --}}
 
-    <div class="w-full bg-white rounded shadow-md
-                border border-gray-200 p-2 mb-2">
+<div class="w-full max-w-full min-w-0
+            bg-white rounded-xl shadow-md
+            border border-gray-200
+            p-5 mb-4">
 
-        <div class="flex justify-between items-center mb-2">
+    {{-- ENCABEZADO --}}
 
-            <div>
+    <div class="flex items-center justify-between gap-4 mb-4">
 
-                <h2 class="text-xl font-bold text-gray-800">
-                    Avance general del proyecto
-                </h2>
+        <div class="min-w-0">
 
-                <p class="text-sm text-gray-500">
-                    Progreso de todos los procesos de producción
-                </p>
+            <h2 class="text-xl font-bold text-gray-800">
+                Avance general del proyecto
+            </h2>
 
-            </div>
-
-
-            <span class="text-3xl font-bold text-blue-700">
-
-                {{ $project->production_progress }}%
-
-            </span>
+            <p class="text-sm text-gray-500">
+                Progreso de todos los procesos de producción
+            </p>
 
         </div>
 
-<br>
-        {{-- BARRA GENERAL --}}
+        {{-- PORCENTAJE --}}
 
-        <div class="w-48 bg-gray-200 rounded-full h-3 overflow-hidden">
+        <span class="shrink-0
+                     text-2xl
+                     font-bold
+                     text-blue-700">
 
-            <div
-                class="bg-blue-600 h-5 rounded-full
-                       transition-all duration-500"
-                style="width: {{ $project->production_progress }}%">
-            </div>
+            {{ $project->production_progress }}%
 
+        </span>
+
+    </div>
+
+
+    {{-- BARRA GENERAL --}}
+
+    <div class="w-full bg-gray-200
+                rounded-full h-4 overflow-hidden">
+
+        <div
+            class="bg-blue-600 h-4
+                   rounded-full
+                   transition-all duration-500"
+            style="width: {{ $project->production_progress }}%">
         </div>
+
+    </div>
 
 <br>
 {{-- ESTADO GENERAL --}}
