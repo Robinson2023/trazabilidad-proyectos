@@ -364,4 +364,14 @@ Route::post(
     [GasCylinderController::class, 'markDelivered']
 )->name('gas-cylinders.delivered');
 
+Route::get(
+    '/inventory/{material}/adjust',
+    [InventoryController::class, 'adjust']
+)->name('inventory.adjust');
+
+Route::post(
+    '/inventory/{material}/adjust',
+    [InventoryController::class, 'storeAdjustment']
+)->name('inventory.adjust.store');
+
 require __DIR__.'/auth.php';
