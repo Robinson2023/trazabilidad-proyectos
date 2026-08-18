@@ -19,8 +19,8 @@ use App\Http\Controllers\GasEquipmentController;
 use App\Http\Controllers\GasCylinderController;
 use App\Http\Controllers\GasSettingController;
 use App\Services\NewsService;
-use App\Http\Controllers\InventoryEntryController;
 use App\Http\Controllers\GasCylinderConsumptionController;
+use App\Http\Controllers\DailyScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -313,12 +313,6 @@ Route::post(
     [ProductStepController::class,'sync']
 )->name('products.steps.sync');
 
-Route::get('/inventory/entry', [InventoryEntryController::class, 'create'])
-    ->name('inventory.entry');
-
-Route::post('/inventory/entry', [InventoryEntryController::class, 'store'])
-    ->name('inventory.entry.store');
-
 Route::post(
     '/materials/recalculate-costs',
     [MaterialController::class, 'recalculateCosts']
@@ -373,5 +367,21 @@ Route::post(
     '/inventory/{material}/adjust',
     [InventoryController::class, 'storeAdjustment']
 )->name('inventory.adjust.store');
+
+Route::resource(
+    'daily-schedules',
+    DailyScheduleController::class
+);
+
+Route::patch(
+    '/daily-schedules/{dailySchedule}/start',
+    [DailyScheduleController::class, 'start']
+)->name('daily-schedules.start');
+
+
+Route::patch(
+    '/daily-schedules/{dailySchedule}/complete',
+    [DailyScheduleController::class, 'complete']
+)->name('daily-schedules.complete');
 
 require __DIR__.'/auth.php';

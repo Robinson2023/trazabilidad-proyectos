@@ -83,7 +83,7 @@
             </td>
 
             <td class="p-3 space-x-2">
-
+                <button class="bg-red-500 text-white px-2 py-1 rounded">
                 <a href="{{ route('materials.edit', $material->id) }}"
                    class="bg-yellow-500 text-white px-2 py-1 rounded">
                     Editar
